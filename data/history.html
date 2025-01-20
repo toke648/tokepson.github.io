@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .initial {
+            margin-top: 50vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="head_top">
+            <p><a href="../index.html">Tokepson</a><p>
+    
+            <ul>
+                <li><a href="../index.html">Produce</a></li>
+                <li><a href="music.html">Music</a></li>
+                <li><a href="paint.html">Paint</a></li>
+                <li><a href="music1.html">Code</a></li>
+                <li><a href="game.html">Game</a></li>
+                <li><a href="history.html">History</a></li>
+            </ul>
+        </div>
+    
+        <div class="head_right">
+            <ul>
+                <li><a href="">登录</a></li>
+                <li><a href="">注册</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <script>
+        let lastScrollTop = 0; // 上一次的滚动位置
+        const header = document.querySelector('.header'); // 选择导航栏元素
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.scrollY; // 当前滚动位置
+            if (currentScroll > lastScrollTop) {
+                // 向下滚动，隐藏导航栏
+                header.style.top = '-60px';
+            } else {
+                // 向上滚动，显示导航栏
+                header.style.top = '0';
+            }
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // 防止负值
+        });
+    </script>
+
+    <div class="initial"></div>
+
+    <section>
+        <div class="section">
+            <p>||o(*°▽°*)o|Ю [有人吗?]</p>
+
+        </div>
+
+        <div class="section">
+            <img src="../images/image.png">
+            <p>Hey Vergil, your portal-opening days are over. Give me the Yamato.</p>
+
+            <p>you want it, then you’ll have to take it. But you already knew that.</p>
+              
+            <p>I had a feeling you’d say that.</p>
+              
+            <p>many times have we fought ?</p> 
+              
+            <p>Hard to say. It's the only the memory I have of us since we were kids. Time to finish this, Vergil. Once and for all.</p>
+              
+
+        </div>
+
+        <div class="section">
+            <p>||o(*°▽°*)o|Ю [有人吗?]</p>
+
+        </div>
+
+        <div class="section">
+            <p>||o(*°▽°*)o|Ю [有人吗?]</p>
+
+        </div>
+
+    </section>
+
+    <div class="floter"></div>
+
+</body>
+</html>

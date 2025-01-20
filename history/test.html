@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>  
+        <label id="progress-label">饱食度</label>  
+        <progress id="progress-bar" value="0" max="100"></progress>  
+        <button onclick="updateProgress()">更新进度</button>  
+    </div>  
+    <script>  
+        function updateProgress() {  
+            let progressBar = document.getElementById('progress-bar');  
+            progressBar.value = Math.min(progressBar.value + 10, 100); // 每次增加10%  
+        }
+    </script>  
+
+    <div class="music">
+        <iframe 
+            frameborder="0" 
+            src="//music.163.com/outchain/player?type=2&id=2026565329&auto=1&height=66" 
+            width="330" 
+            height="86"
+            allow="autoplay">
+        </iframe>
+    </div>
+</body>
+</html>

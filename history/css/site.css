@@ -1,0 +1,28 @@
+.maker_upper p{
+    background: #ff0303;
+
+}
+
+.maker_upper{
+    background-color: #ccc;
+    text-align: center;
+    width: 400px;
+    height: 400px;
+}
+
+.maker_upper ul{
+    text-align: left;
+}
+
+.maker_front{
+    background-color: #4512fd;
+    width: 300px;
+    height: 300px;
+}
+
+.maker_bottom{
+    background-color: aqua;
+    width: 300px;
+    height: 300px;
+
+}

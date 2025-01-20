@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Navigation with Hamburger Menu</title>
+    <style>
+        /* 基本样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        /* 整个导航区域 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        /* 标题 */
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        /* 导航菜单（桌面端） */
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin: 0 10px;
+        }
+
+        .nav-menu a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1em;
+        }
+
+        .nav-menu a:hover {
+            text-decoration: underline;
+        }
+
+        /* 汉堡菜单按钮（仅移动端显示） */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            height: 3px;
+            width: 25px;
+            background-color: #fff;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* 移动端导航菜单 */
+        .nav-menu-mobile {
+            display: none;
+            flex-direction: column;
+            background-color: #333;
+            position: absolute;
+            top: 60px;
+            right: 0;
+            width: 100%;
+            padding: 10px;
+        }
+
+        .nav-menu-mobile a {
+            padding: 10px;
+            border-bottom: 1px solid #444;
+        }
+
+        /* 媒体查询 */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none; /* 隐藏桌面导航 */
+            }
+
+            .hamburger {
+                display: flex; /* 显示汉堡按钮 */
+            }
+
+            .nav-menu-mobile.active {
+                display: flex; /* 激活状态时显示菜单 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <div class="header">
+        <div class="logo">My Website</div>
+        <!-- 桌面导航菜单 -->
+        <ul class="nav-menu">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <!-- 汉堡菜单按钮 -->
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <!-- 移动端导航菜单 -->
+        <div class="nav-menu-mobile">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#services">Services</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </div>
+
+    <!-- 内容部分 -->
+    <div style="margin-top: 80px; padding: 20px;">
+        <section id="home">
+            <h1>Welcome to My Website</h1>
+            <p>This is the home section.</p>
+        </section>
+        <section id="about" style="margin-top: 100px;">
+            <h1>About Us</h1>
+            <p>This is the about section.</p>
+        </section>
+        <section id="services" style="margin-top: 100px;">
+            <h1>Our Services</h1>
+            <p>This is the services section.</p>
+        </section>
+        <section id="contact" style="margin-top: 100px;">
+            <h1>Contact Us</h1>
+            <p>This is the contact section.</p>
+        </section>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const hamburger = document.querySelector('.hamburger');
+        const mobileMenu = document.querySelector('.nav-menu-mobile');
+
+        // 点击汉堡按钮，切换菜单显示状态
+        hamburger.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+    <style>
+        .container-first {
+            height: 350px;
+            background-color: aqua;
+        }
+
+        .box-normal {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+        }
+
+        .box-relative {
+            width: 100px;
+            height: 100px;
+            background-color: green;
+            position: relative; /* 相对定位 */
+            top: -50px;
+            left: 50%;
+        }
+
+        .box-block {
+            width: 100px;
+            height: 100px;
+            background-color: blue;
+            float: right;
+        }
+
+        .container-second {
+            height: 350px;
+            background-color: yellow;
+        }
+
+        .box1-normal {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+        }
+
+        .box1-relative {
+            width: 100px;
+            height: 100px;
+            background-color: green;
+            position: absolute; /* 绝对定位 */
+            left: 120px;
+
+        }
+
+        .box1-block {
+            width: 100px;
+            height: 100px;
+            background-color: blue;
+
+        }
+
+        .container-third {
+            height: 350px;
+            background-color: pink;
+        }
+
+        .box2-normal {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+        }
+
+        .box2-relative {
+            width: 100px;
+            height: 100px;
+            background-color: green;
+            position: fixed;  /* 固定定位 */
+            top: 50px;
+            left: 50px;
+        }
+
+        .box2-block {
+            width: 100px;
+            height: 100px;
+            background-color: blue;
+
+        }
+
+
+
+    </style>    
+</head>
+<body>
+    <!-- css的定位 
+     通过position属性来设置元素的定位方式
+        1. static 默认值，元素按照正常文档流进行排列
+        2. relative 相对定位，元素相对于自身原来的位置进行定位
+        3. absolute 绝对定位，元素相对于最近的已定位的祖先元素进行定位
+        4. fixed 固定定位，元素相对于浏览器窗口进行定位
+    -->
+
+    <!-- 相对定位 -->
+    <h1>相对定位</h1>
+    <div class="container-first">
+        <div class="box-normal"></div>
+        <div class="box-relative"></div>
+        <div class="box-block"></div>
+    </div>
+
+    <!-- 绝对定位 -->
+    <h1>绝对定位</h1>
+    <div class="container-second">
+        <div class="box1-normal"></div>
+        <div class="box1-relative"></div>
+        <div class="box1-block"></div>
+    </div>
+
+    <!-- 固定定位 -->
+    <h1>固定定位</h1>
+    <div class="container-third">
+        <div class="box2-normal"></div>
+        <div class="box2-relative"></div>
+        <div class="box2-block"></div>
+    </div>
+
+    <!-- 将图片作为背景，不会影响页面布局 -->
+
+</body>
+</html>

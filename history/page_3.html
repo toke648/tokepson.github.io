@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        li {
+            font-size: 25px;
+            color: red;
+            font-weight: bolder;
+        }
+        ul{
+            font-size: none;
+            color: none;
+            font-weight: none;
+        }
+
+        img {
+            max-width: 45%;
+            height: auto;
+            display: inline;
+        }
+
+        video {
+            max-width: 45%;
+            height: auto;
+            display: inline;
+        }
+
+        audio {
+            display: inline;
+        }
+
+        .table_list {
+            width: auto;
+            height: auto;
+            text-align: center;
+            background: #ccc;
+        }
+
+        .table_nap {
+            width: 40%;
+            height: 120%;
+            text-align: center;
+        }
+
+        textarea {
+            width: 400px;
+            height: 200px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <ol class="main">
+        <li><b>标题标签 hr</b></li>
+        <h1>文章标题</h1>
+        <h2>文章标题</h2>
+        <h3>文章标题</h3>
+        <h4>文章标题</h4>
+        <h5>文章标题</h5>
+        <h6>文章标题</h6>
+
+        <li>段落标签p</li>
+        <p>文章标题hello</p>
+
+        <li>换行标签br 水平标签hr</li>
+        <p>Thirsty ChatGPT uses four times more water than previously thought</p>
+        <p>The massive computer clusters powering artificial intelligence consume vast quantities to answer the world’s
+            queries, <br> how is Big Tech redressing the balance?</p>
+
+        <hr>
+        <p>You may be hungry for knowledge, but your chatbot is thirsty for the world’s water supplies. The huge
+            computer clusters powering ChatGPT need four times as much water to deliver answers than previously thought,
+            it has been claimed.</p>
+        <hr>
+
+        <li>文本格式(也可以在style里设置)</li><br>
+        <b>hello</b> <strong>hello</strong> <br>
+        <u>hello</u> <ins>hello</ins> <br>
+        <i>hello</i> <em>hello</em> <br>
+        <s>hello</s> <del>hello</del> <br><br>
+
+        <li>略 img a vedio audio ul ol li (已会，学习样式)</li><br>
+        <img src="./images/99459661_p0.jpg" alt="blue hair girl">
+
+        <video src="./vedio/Mix - Kawaii Electronic Lightly , Kawaii EDM Lightly , Sleep Music (Part 2).mp4"
+            controls></video>
+        <video src="./vedio/Kirara Magic & Couple N - Toy Quest.mp4" controls></video>
+        <video src="./vedio/ssstwitter.com_1716829243468.mp4" controls></video>
+
+        <audio src="./aduio/Snigellin - When I see the light at that Time.mp3" controls></audio>
+        <audio src="./aduio/Hans Zimmer - Time.mp3" controls></audio>
+        <audio src="./aduio/Lia - 青空 ~.mp3" controls></audio>
+        <audio src="./aduio/LizNoir、初音ミク - 星のように夜を照らせ.mp3" controls>LizNoir、初音ミク - 星のように夜を照らせ</audio>
+        <audio src="./aduio/Snigellin - When I see the light at that Time.mp3" controls></audio>
+        <br><br>
+
+        <li>表格格式 rowspan 跨行合并 colspan 跨列合并</li><br>
+        <!--高度宽度设置为自适应auto，更方便管理-->
+        <table class="table_list" border="1" align="center">
+            <thead>
+                <tr>
+                    <th colspan="19" 世界杯ABCD分组表>世界杯ABCD分组表</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>A组</td>
+                    <td>南非</td>
+                    <td>中国</td>
+                    <td>巴西</td>
+                    <td rowspan="5">--</td>
+                    <td>E组</td>
+                    <td>南非</td>
+                    <td>中国</td>
+                    <td>巴西</td>
+                    <td rowspan="5">--</td>
+                    <td>G组</td>
+                    <td>南非</td>
+                    <td>中国</td>
+                    <td>巴西</td>
+                    <td rowspan="5">--</td>
+                    <td>L组</td>
+                    <td>南非</td>
+                    <td>中国</td>
+                    <td>巴西</td>
+                </tr>
+
+                <tr>
+                    <td>B组</td>
+                    <td>南非</td>
+                    <td>中国</td>
+                    <td>巴西</td>
+                </tr>
+
+                <tr>
+                    <td>C组</td>
+                    <td>南非</td>
+                    <td>中国</td>
+                    <td>巴西</td>
+                </tr>
+
+                <tr>
+                    <td>D组</td>
+                    <td>南非</td>
+                    <td>中国</td>
+                    <td>巴西</td>
+                    <td>南非</td>
+                    <td>中国</td>
+                    <td>巴西</td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td></td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td></td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td></td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                </tr>
+            </tbody>
+        </table><br>
+
+        <table border="1" align="center">
+            <tr>
+                <th>Header 1</th>
+                <th>Header 2</th>
+            </tr>
+            <tr>
+                <td>row 1, cell 1</td>
+                <td>row 1, cell 2</td>
+            </tr>
+            <tr>
+                <td>row 2, cell 1</td>
+                <td>row 2, cell 2</td>
+            </tr>
+        </table>
+
+        <li>表达标签</li>
+        <p>使用的场景:登录页面,注册页面,搜索框会用到,其他的地方基本不会用到,但是对于新手来说,其实基本用不到这个功能,学完后,如果大家忘了以后回来在翻翻就ok</p>
+        Text box:<input type="text"><br>
+        Text box:<input type="text" placeholder="Please input your Username"><br>
+        Password:<input type="password"><br>
+        Password:<input type="password" placeholder="Please input your Password"><br>
+        单选框:<input type="radio"><br>
+        单选框:<input type="radio">man<input type="radio">woman<br>
+        单选框:<input type="radio" name="sex">man<input type="radio" name="sex" checked>woman<br>
+        多选框:<input type="checkbox"><br>
+        多选框:<input type="checkbox" name="bobby">bath<input type="checkbox" name="bobby">sing
+        <input type="checkbox" name="bobby">eat<br>
+        上传文件:<input type="file"><br>
+        上传文件:<input type="file" sultiple><br>
+        <br>
+        <form action="">
+            文本框:<input type="text" placeholder="Please input your Username"><br>
+            Password:<input type="password" placeholder="Please input your Password"><br>
+            <input type="submit">
+            <input type="submit" value="free Sign in">
+            <input type="reset">
+            <input type="button" value="接送">
+        </form>
+        <br>
+        <form action="">
+            文本框:<input type="text" placeholder="Please input your Username"><br>
+            Password:<input type="password" placeholder="Please input your Password"><br>
+            <button>Button</button>
+            <button type="menu">menu</button>
+            <button type="submit">Submit</button>
+            <button type="reset">Reset</button>
+        </form>
+
+        <p> 8.下拉标签select>option 可以用selected设置默认值<br>
+            9.文本域标签<br>
+            10.lable标签</p>
+
+        <select>
+            <option>BeiJing</option>
+            <option>BeiJing</option>
+            <option>BeiJing</option>
+            <option>BeiJing</option>
+            <option selected>深沉</option>
+        </select>
+
+        <textarea></textarea>
+
+        <!--The First wirte-->
+        <input type="radio" id="nan"><label for="nan">man</label>
+
+        <!--The Second wirte-->
+        <label><input type="radio"></label>
+        <label><input type="radio"></label>
+        <br>
+        <br>
+
+        <li>语义化标签</li><br>
+
+        普通标签
+        <div>这是div标签</div>
+        <div>这是div标签</div>
+
+        <span>这是span标签</span>
+        <span>这是span标签</span>
+        <br><br>
+
+        <li>字符实体标签</li><br>
+
+        <li>Practice</li><br>
+
+        <table class="table_nap" align="center" border="1">
+            <thead>
+                <tr>
+                    <th colspan="4">优秀学生名单</th>
+                </tr>
+
+            </thead>
+
+            <tbody height="300">
+                <tr>
+                    <td>年级</td>
+                    <td>姓名</td>
+                    <td>学号</td>
+                    <td>班级</td>
+
+                </tr>
+                <tr height="150" weight="600">
+                    <td rowspan="2">高三</td>
+                    <td>张三</td>
+                    <td>120</td>
+                    <td>三年级二班</td>
+                </tr>
+                <tr height="150">
+                    <td>李四</td>
+                    <td>120</td>
+                    <td>三年级二班</td>
+                </tr>
+                <tr>
+                    <td>评语</td>
+                    <td colspan="4">你们都很优秀</td>
+                </tr>
+
+            </tbody>
+        </table>
+
+        <p style="font-size: 35px"><b>青春不常在，抓紧谈恋爱</b></p>
+        <hr>
+        昵称：<input type="text" placeholder="请输入昵称"><br><br>
+        性别：<input type="radio" name="sex">男<input type="radio" name="sex">女<br><br>
+        所在城市：<select>
+            <option value="">上海</option>
+        </select><br><br>
+        结婚状况：<input type="radio" name="Marriage status">未婚<input type="radio" name="Marriage status">已婚<input
+            type="radio" name="Marriage status">保密<br><br>
+        喜欢类型：<input type="checkbox" placeholder="like">可爱<input type="checkbox" placeholder="like">性感<input
+            type="checkbox" placeholder="like">御姐<input type="checkbox" placeholder="like">萝莉<input type="checkbox"
+            placeholder="like">小鲜肉<input type="checkbox" placeholder="like">大叔<br><br>
+        个人介绍：<br><br>
+        <textarea placeholder="个人经历"></textarea>
+        <h2>我承诺</h2>
+        <ul>
+            <li>年满18岁 单身</li>
+            <li>抱着严肃的态度</li>
+            <li>真诚寻找另一半</li>
+        </ul><br>
+        <input type="checkbox">我同意所有条款<br><br>
+
+        <button type="submit">免费注册</button>
+        <button type="reset">重置</button>
+
+    </ol>
+
+</body>
+
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tokepson Web</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .section {
+            margin: 50px;
+            padding: 25px;
+
+            border-radius: 15px;  /* 页面圆角 */
+            background-color: white;
+
+        }
+
+    </style>
+
+</head>
+<body>
+    <!-- 
+    垂直居中 align-items: center;  
+    文本居中 text-align: center;
+    -->
+
+    <div class="header">
+        <div class="head_top">
+            <p><a href="index.html">Tokepson</a><p>
+    
+            <ul>
+                <li><a href="index.html">Produce</a></li>
+                <li><a href="./data/music.html">Music</a></li>
+                <li><a href="./data/paint.html">Paint</a></li>
+                <li><a href="./data/music1.html">Code</a></li>
+                <li><a href="./data/game.html">Game</a></li>
+                <li><a href="./data/history.html">History</a></li>
+            </ul>
+        </div>
+    
+        <div class="head_right">
+            <ul>
+                <li><a href="">登录</a></li>
+                <li><a href="">注册</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <script>
+        let lastScrollTop = 0; // 上一次的滚动位置
+        const header = document.querySelector('.header'); // 选择导航栏元素
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.scrollY; // 当前滚动位置
+            if (currentScroll > lastScrollTop) {
+                // 向下滚动，隐藏导航栏
+                header.style.top = '-60px';
+            } else {
+                // 向上滚动，显示导航栏
+                header.style.top = '0';
+            }
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // 防止负值
+        });
+    </script>
+
+    <div class="initial"></div>
+
+    <section>
+        <div class="section">
+            <p>||o(*°▽°*)o|Ю [有人吗?]</p>
+
+        </div>
+
+        <div class="section">
+            <p>||o(*°▽°*)o|Ю [有人吗?]</p>
+
+        </div>
+
+        <div class="section">
+            <h1>Music</h1>
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=2026565329&auto=1&height=66"></iframe>
+    
+            <div class="section_content">
+                <h1>Section Title</h1>
+    
+                <p>Section Content</p>
+    
+                <h1>Token</h1>
+                <p>Token is a type of cryptocurrency that is used to pay for transaction fees on the Ethereum network. It is also used to pay for services on the network, such as smart contracts and decentralized applications. Tokens can be created by anyone, and can represent any type of asset, such as a digital collectible, a voting right, or a share in a company. Tokens are typically created using the ERC-20 standard, which defines a set of rules that all tokens on the Ethereum network must follow.</p>
+            </div>
+
+        </div>
+
+        <div class="section">
+            <img src="../images/image.png">
+            <p>Hey Vergil, your portal-opening days are over. Give me the Yamato.</p>
+
+            <p>you want it, then you’ll have to take it. But you already knew that.</p>
+              
+            <p>I had a feeling you’d say that.</p>
+              
+            <p>many times have we fought ?</p> 
+              
+            <p>Hard to say. It's the only the memory I have of us since we were kids. Time to finish this, Vergil. Once and for all.</p>
+              
+
+        </div>
+
+        <div class="section">
+            <h1>History</h1>
+            <p>这里记录着我过去所写过的网页</p>
+            <ul>
+                <li><p><a href="./history/index.html">2024.1.12</a> 复习Html+Css写的网页</p></li>
+                <li><p><a href="./ChatGpt/汉堡隐藏栏.html">汉堡隐藏栏</a>  实现汉堡隐藏的效果</p></li>
+                <li><p><a href="./data/test.html">测试</a>  功能测试</p></li>
+            </ul>
+
+        </div>
+
+    </section>
+
+    <div class="floter">
+    </div>
+
+    
+</body>
+</html>
