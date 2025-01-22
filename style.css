@@ -3,6 +3,8 @@ body {
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
+    font-family: Arial, sans-serif;
+    
     margin: 0; /* 确保没有额外空白 */
     padding: 0;
 }
@@ -69,17 +71,50 @@ body {
 }
 
 .section {
-    margin: 50px;
+    margin-inline: 120px; /* 左右边距 inline意思是 内联元素 */
+    margin-block: 50px; /* 上下边距 block意思是 块元素 */
     padding: 25px;
 
-    border-radius: 15px;  /* 页面圆角 */
+    border-radius: 5px;  /* 页面圆角 */
     background-color: white;
 
 }
 
-.floter {
+.flooter {
     width: 100%;
-    height: 80px;
-    background-color: #000000;
+    height: 50px;
     margin-top: 50px;
+    font-size: 13px;
+    
+    color: #999;
+
+    /* 网页实现不换行隐藏 */
+    display: flex; /* 水平排列,默认是垂直排列,flex是弹性布局,可以设置子元素的排列方式,默认是水平排列 */
+    flex-wrap: nowrap; /* 不换行 */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+
+    text-align: center;
+    background-color: #000000;
+    /* box-sizing:border-box; */
 }
+
+.flooter ul li {
+    /* 垂直居中 */
+    padding: 0;
+    margin: 0 10px;
+
+    list-style: none; /* 去掉列表的点 */
+    display: inline-block; /* 水平排列 */
+}
+
+.flooter a {
+    color: #999;
+    text-decoration: none;
+
+}
+
+
