@@ -10,21 +10,22 @@
 </head>
 <body>
     <!-- 
-    垂直居中 align-items: center;  
-    文本居中 text-align: center;
+        垂直居中 align-items: center;  
+        文本居中 text-align: center;
     -->
 
+    <!-- 导航栏 -->
     <div class="header">
         <div class="head_top">
             <p><a href="index.html">Tokepson</a><p>
     
             <ul>
-                <li><a href="index.html">Produce</a></li>
-                <li><a href="./data/music.html">Music</a></li>
-                <li><a href="./data/paint.html">Paint</a></li>
-                <li><a href="./data/music1.html">Code</a></li>
-                <li><a href="./data/game.html">Game</a></li>
-                <li><a href="./data/history.html">History</a></li>
+                <li><a href="index.html">介绍</a></li>
+                <li><a href="./data/music.html">音乐</a></li>
+                <li><a href="./data/paint.html">绘画</a></li>
+                <li><a href="./data/music1.html">代码</a></li>
+                <li><a href="./data/game.html">游戏</a></li>
+                <li><a href="./data/history.html">历史</a></li>
             </ul>
         </div>
     
@@ -37,7 +38,43 @@
 
     </div>
 
+    <div class="initial"></div> <!-- 初始化背景图片 -->
+
+    <!-- 待定 -->
+    <div class="project"> 
+        
+    </div>
+
+    <!-- 透明度渐变 -->
     <script>
+        const header = document.querySelector('.header');
+        let lastScrollTop = 0;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.scrollY;
+            const scrollHeight = document.documentElement.scrollHeight;
+            const windowHeight = window.innerHeight;
+
+            // 判断是否在顶部或底部
+            const atTop = currentScroll === 0;
+            const atBottom = currentScroll + windowHeight >= scrollHeight;
+
+            if (atTop || atBottom) {
+                // 顶部或底部，恢复正常透明度
+                header.style.opacity = '1';
+            } else if (currentScroll > lastScrollTop) {
+                // 向下滚动，变淡
+                header.style.opacity = '0.3';
+            } else {
+                // 向上滚动，恢复正常
+                header.style.opacity = '1';
+            }
+
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        });
+    </script>
+
+    <!-- <script>
         let lastScrollTop = 0; // 上一次的滚动位置
         const header = document.querySelector('.header'); // 选择导航栏元素
 
@@ -52,26 +89,39 @@
             }
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // 防止负值
         });
-    </script>
+    </script> -->
 
-    <div class="initial"></div>
+    <!-- live2d -->
+    <script src="https://fastly.jsdelivr.net/npm/live2d-widgets@0/autoload.js"></script>\
 
-    <section>
-        <div class="section">
+    <!-- 侧边栏 -->
+    <!-- <div class="sidebar"></div> -->
+
+    <!-- 主体 -->
+    <div class="theme">
+        <!-- 
+        参数:
+        acticle_content : 文章内容
+        acticle : 文章
+        theme : 主体
+        
+        -->
+        <p style="font-size: xx-large;">Blog post</p>
+
+        <div class="acticle">
+                <p>||o(*°▽°*)o|Ю [有人吗?]</p>
+        </div>
+
+        <div class="acticle">
             <p>||o(*°▽°*)o|Ю [有人吗?]</p>
 
         </div>
 
-        <div class="section">
-            <p>||o(*°▽°*)o|Ю [有人吗?]</p>
-
-        </div>
-
-        <div class="section">
+        <div class="acticle">
             <h1>Music</h1>
             <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=2026565329&auto=1&height=66"></iframe>
     
-            <div class="section_content">
+            <div class="acticle_content">
                 <h1>Section Title</h1>
     
                 <p>Section Content</p>
@@ -82,22 +132,32 @@
 
         </div>
 
-        <div class="section">
-            <img src="../images/image.png">
-            <p>Hey Vergil, your portal-opening days are over. Give me the Yamato.</p>
+        <div class="acticle">
+            <!-- <img src="../images/image.png"> -->
+             <div class="acticle_brief_picture">
+                <div class="acticle_brief">
+                    <div class="acticle_title">
+                        <p>Yamato</p>
+                    </div>
 
-            <p>you want it, then you’ll have to take it. But you already knew that.</p>
-              
-            <p>I had a feeling you’d say that.</p>
-              
-            <p>many times have we fought ?</p> 
-              
-            <p>Hard to say. It's the only the memory I have of us since we were kids. Time to finish this, Vergil. Once and for all.</p>
-              
+                    <p>Hey Vergil, your portal-opening days are over. Give me the Yamato.
+                        you want it, then you’ll have to take it. But you already knew that.
+                        I had a feeling you’d say that.
+                        many times have we fought ?
+                        Hard to say. It's the only the memory I have of us since we were kids. 
+                        Time to finish this, Vergil. Once and for all.
+                    </p>  
+
+                </div>
+
+                <div class="acticle_picture"> 
+                        <img src="../images/image.png">
+                </div>
+             </div>
 
         </div>
 
-        <div class="section">
+        <div class="acticle">
             <h1>History</h1>
             <p>这里记录着我过去所写过的网页</p>
             <ul>
@@ -107,28 +167,22 @@
             </ul>
 
         </div>
+    </div>
 
-    </section>
+    <div class="initial"></div> <!-- 初始化背景图片 -->
 
+    <!-- 底部 -->
     <div class="flooter">
         <ul>
             <li>© 2023 Tokepson</li>
-            <li><a href="">关于</a></li>
-            <li><a href="">联系</a></li>
-            <li><a href="">隐私</a></li>
-            <li><a href="">条款</a></li>
 
             <li>Email: 1667380289@qq.com</li>
 
             <li><a href="https://github.com/toke648">Github</a></li>
             <li><a href="https://blog.csdn.net/qq_63036514?type=blog">CDSN</a></li>
             <li><a href="https://space.bilibili.com/513658479?spm_id_from=333.1007.0.0">Bilibili</a></li>
-            <li><a href="">Twitter</a></li>
-            <li><a href="">Facebook</a></li>
-            <li><a href="">Instagram</a></li>
         </ul>
 
     </div>
-    
 </body>
 </html>

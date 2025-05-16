@@ -1,3 +1,14 @@
+/* 我不得不提一句，
+    写的时候记得分配好每个部分的格式
+    不然到后面乱了整理都整理不过来 
+
+    (找的时候记得用Ctrl+F快速搜索)
+
+    参数：头部、导航栏、主体、文章、底部
+
+*/
+
+/* 头部、通用主体参数定义 */
 body {
     background-image: url(./images/99459661_p0.jpg);
     background-size: cover;
@@ -6,36 +17,40 @@ body {
     font-family: Arial, sans-serif;
     
     margin: 0; /* 确保没有额外空白 */
-    padding: 0;
+
 }
 
+/* 导航栏 */
 .header {
     width: 100%;
-    height: 60px;
-    background-color: black;
-    opacity: 0.8;
+    height: 65px;
+    background-color: white;
     position: fixed;  /* 固定定位 */
-    top: 0;
-    left: 0;
-    display: flex;
-    align-items: center;
-    z-index: 1000;
-    margin: 0;
+    top: 0; /* 固定定位 */
+    left: 0; /* 固定定位 */
+    display: flex; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+    z-index: 1000; /*  设置z-index值，意思：元素会覆盖其他元素 */
+    margin: 0; /* 清除默认边框空白，确保没有额外空白 */
+
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* 阴影 */
     transition: top 0.5s ease-in-out; /* 平滑过渡效果 */
 
 }
 
+/* 可能需要拆除的参数 */
 .header p, .header ul,.header a {
     margin: 0;
     padding: 0;
 }
 
 .head_top p {
-    /* font-family: 黑体; 设置字体 */
+    /* font-family: 黑体 ; 设置字体 */
+    /* 字体颜色: color: #000000; */
     font-size: 22px; /* 设置字体大小 */
     font-weight: 1000; /* 设置字体粗细 */
+    padding-left: 15%;
 
-    padding-left: 10px;
 }
 
 .header ul {
@@ -47,42 +62,124 @@ body {
 .header li {
     margin: 0;
     padding: 5px;
-    /* background-color: aquamarine; */
 }
 
 .header a {
-    color: #ffffff;
-    text-decoration: none;
+    color: #000000; /* 控制标题栏颜色 */
+    text-decoration: none; /* 去掉标题栏下划线 */
 
 }
 
+/* 头部参数-左侧 */
 .head_top {
     height: 100%;
     width: 90%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: flex; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+    justify-content: space-between; /* 居中对齐 */
     padding: 0 20px;
     box-sizing: border-box;
 }
 
+/* 头部-右侧 */
+.head_right {
+    display: flex;
+    align-items: center;
+    padding-right: 15%;
+}
+
+/* 初始化背景图 */
 .initial {
+    /* 初始100vh高度的空行 */
     margin-top: 100vh;
 }
 
-.section {
-    margin-inline: 120px; /* 左右边距 inline意思是 内联元素 */
-    margin-block: 50px; /* 上下边距 block意思是 块元素 */
-    padding: 25px;
-
-    border-radius: 5px;  /* 页面圆角 */
+/* 个人介绍 */
+.project { 
+    height: 500px;
     background-color: white;
+    display: flex;
+    /* 上下间间距 */
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 150px;
 
 }
 
+/* 主体 */
+.theme {
+    margin-inline: 200px; /* 左右边距 inline意思是 内联元素 */
+    background-color: rgb(235, 235, 255);
+    padding: 50px;
+
+}
+
+/* 侧边 - 待定 */
+.sidebar {
+    height: 300px;
+    width: 165px;
+    /* 固定位置 */
+    position: fixed;
+    /* 居左 */
+    left: 15px;
+    top: 80px;
+    z-index: 999;
+    background-color: #ff0000;
+}
+
+/* 文章 */
+.acticle {
+    height: auto;
+    margin-block: 50px; /* 上下边距 block意思是 块元素 */
+    padding: 25px 25px 25px 25px;
+
+    border-radius: 5px;  /* 页面圆角 */
+    background-color: white;
+}
+
+.acticle_brief_picture {
+    /* 内部块元素不换行 */
+    display: flex; /* ← 横向排列子元素 */
+    height: 120px;
+    
+}
+
+/* 文章-简介（左边） */
+.acticle_brief {
+    margin-top: 5px;
+    width: 75%;
+    padding-right: 20px;
+    box-sizing: border-box; /* 宽度包含边框 */
+    font-size: 15px;
+}
+
+.acticle_title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* 文章-图片（右边） */
+.acticle_picture {
+    margin-top: 10px;
+    width: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px; /* 外边距 */
+    box-sizing: border-box; /* 内边距 */
+}
+
+.acticle_picture img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px; /* 可选：图片圆角 */
+}
+
+/* 底部 */
 .flooter {
     width: 100%;
-    height: 50px;
+    height: 200px;
     margin-top: 50px;
     font-size: 13px;
     
@@ -98,7 +195,7 @@ body {
     align-items: center; /* 垂直居中 */
 
     text-align: center;
-    background-color: #000000;
+    background-color: white;
     /* box-sizing:border-box; */
 }
 
@@ -113,7 +210,7 @@ body {
 
 .flooter a {
     color: #999;
-    text-decoration: none;
+    text-decoration: none; /* 去掉下划线 */
 
 }
 
