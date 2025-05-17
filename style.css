@@ -24,17 +24,23 @@ body {
 .header {
     width: 100%;
     height: 65px;
+
     background-color: white;
+
     position: fixed;  /* 固定定位 */
     top: 0; /* 固定定位 */
     left: 0; /* 固定定位 */
     display: flex; /* 水平居中 */
+
     align-items: center; /* 垂直居中 */
     z-index: 1000; /*  设置z-index值，意思：元素会覆盖其他元素 */
     margin: 0; /* 清除默认边框空白，确保没有额外空白 */
 
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* 阴影 */
     transition: top 0.5s ease-in-out; /* 平滑过渡效果 */
+
+    padding-left: 15%;
+    box-sizing: border-box; /* 确保元素内边距不会影响元素宽度 */
 
 }
 
@@ -44,24 +50,19 @@ body {
     padding: 0;
 }
 
-.head_top p {
-    /* font-family: 黑体 ; 设置字体 */
-    /* 字体颜色: color: #000000; */
-    font-size: 22px; /* 设置字体大小 */
-    font-weight: 1000; /* 设置字体粗细 */
-    padding-left: 15%;
-
-}
-
 .header ul {
+    gap: 20px;
+    padding: 10px;
     display: flex;
-    gap: 20px; /* 调整列表项间距 */
     list-style: none; /* 去掉列表项的默认样式 */
+    
+    /* background-color: chartreuse; */
 }
 
 .header li {
     margin: 0;
     padding: 5px;
+    /* background-color: #ff0000; */
 }
 
 .header a {
@@ -70,22 +71,65 @@ body {
 
 }
 
+
+/* 头部左右分配90: 10 */
+
 /* 头部参数-左侧 */
 .head_top {
     height: 100%;
-    width: 90%;
+    width: 70%; /* 调整为 padding 兼容的宽度 */
     display: flex; /* 水平居中 */
+    /* background-color: blueviolet; */
+    
     align-items: center; /* 垂直居中 */
-    justify-content: space-between; /* 居中对齐 */
-    padding: 0 20px;
-    box-sizing: border-box;
+    padding: 0px 20px;
+    /* margin-right: 5%; */
+    /* padding-right: 10%; */
+    box-sizing: border-box; /* 包含边框 */
 }
+
+.head_top p {
+    /* font-family: 黑体 ; 设置字体 */
+    /* 字体颜色: color: #000000; */
+    font-size: 22px; /* 设置字体大小 */
+    font-weight: 1000; /* 设置字体粗细 */
+    padding-right: 10px;
+    padding-left: 10px;
+
+    /* background-color: brown; */
+
+}
+
+/* 小屏左移，防止崩溃 */
+@media (max-width: 768px) {
+    .header {
+        padding-left: 5%; /* 缩小右移距离 */
+    }
+    .head_top {
+        width: 80%;
+    }
+    .head_right {
+        width: 10%;
+        padding-right: 5px;
+    }
+}
+
+/* 
+.head_top .head_left {
+    display: flex;
+    padding: 5px;
+    background-color: yellow;
+} */
 
 /* 头部-右侧 */
 .head_right {
     display: flex;
-    align-items: center;
-    padding-right: 15%;
+    height: 100%;
+    width: 15%;
+    align-items: center; /* 垂直居中 */
+    padding-right: 10px; /* 改为固定值，避免百分比溢出 */
+    padding-left: 20px;
+    /* background-color: aqua; */
 }
 
 /* 初始化背景图 */
@@ -100,7 +144,7 @@ body {
     background-color: white;
     display: flex;
     /* 上下间间距 */
-    justify-content: center;
+    justify-content: center; /* 水平居中 */
     align-items: center;
     margin-bottom: 150px;
 
@@ -108,7 +152,7 @@ body {
 
 /* 主体 */
 .theme {
-    margin-inline: 200px; /* 左右边距 inline意思是 内联元素 */
+    margin-inline: 300px; /* 左右边距 inline意思是 内联元素 */
     background-color: rgb(235, 235, 255);
     padding: 50px;
 
@@ -131,7 +175,8 @@ body {
 .acticle {
     height: auto;
     margin-block: 50px; /* 上下边距 block意思是 块元素 */
-    padding: 25px 25px 25px 25px;
+    margin: 25px;
+    padding: 25px;
 
     border-radius: 5px;  /* 页面圆角 */
     background-color: white;
@@ -146,7 +191,7 @@ body {
 
 /* 文章-简介（左边） */
 .acticle_brief {
-    margin-top: 5px;
+    margin: 0px; /* 外边距 0px */
     width: 75%;
     padding-right: 20px;
     box-sizing: border-box; /* 宽度包含边框 */
@@ -154,6 +199,7 @@ body {
 }
 
 .acticle_title {
+    margin: 0px;
     font-size: 20px;
     font-weight: bold;
 }
@@ -166,7 +212,7 @@ body {
     align-items: center;
     justify-content: center;
 
-    padding: 10px; /* 外边距 */
+    padding: 0px; /* 外边距 */
     box-sizing: border-box; /* 内边距 */
 }
 
@@ -182,6 +228,7 @@ body {
     height: 200px;
     margin-top: 50px;
     font-size: 13px;
+    padding-top: 50px;
     
     color: #999;
 
