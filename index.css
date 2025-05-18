@@ -1,0 +1,531 @@
+/* 我不得不提一句，
+    写的时候记得分配好每个部分的格式
+    不然到后面乱了整理都整理不过来 
+
+    (找的时候记得用Ctrl+F快速搜索)
+
+    参数：头部、导航栏、主体、文章、底部
+
+    通用主体参数定义
+    默认边距： margin: 0;
+    横向排列： display: flex;
+
+    默认上下边距为
+    margin-top: 100px;
+    margin-bottom: 100px;
+
+    小贴士：
+    最好使用wight或height调整div的宽高，因为flex布局会自动填充
+    如果使用padding或margin调整div的宽高，则div的宽高会超出div的边界
+    造成显示不全、挤压等样式问题
+
+    只要两边都设置auto，那么两边的元素就自动会居中
+
+*/
+
+/* 头部、通用主体参数定义 */
+body {
+    background-image: url(./images/99459661_p0.jpg);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: Arial, sans-serif;
+    
+    margin: 0; /* 确保没有额外空白 */
+
+}
+
+/* a {
+    color: #000;
+    text-decoration: none; 
+} */
+
+/* 导航栏 */
+.header {
+    width: 100%;
+    height: 65px;
+
+    background-color: white;
+
+    position: fixed;  /* 固定定位 */
+    top: 0; /* 固定定位 */
+    left: 0; /* 固定定位 */
+    display: flex; /* 水平居中 */
+
+    align-items: center; /* 垂直居中 */
+    z-index: 1000; /*  设置z-index值，意思：元素会覆盖其他元素 */
+    margin: 0; /* 清除默认边框空白，确保没有额外空白 */
+
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* 阴影 */
+    transition: top 0.5s ease-in-out; /* 平滑过渡效果 */
+
+    /* padding-left: 15%; */
+    box-sizing: border-box; /* 确保元素内边距不会影响元素宽度 */
+
+}
+
+/* 可能需要拆除的参数 */
+.header p, .header ul,.header a {
+    margin: 0;
+    padding: 0;
+}
+
+.header ul {
+    gap: 20px;
+    padding: 10px;
+    display: flex;
+    list-style: none; /* 去掉列表项的默认样式 */
+    
+    /* background-color: chartreuse; */
+}
+
+.header li {
+    margin: 0;
+    padding: 5px;
+    /* background-color: #ff0000; */
+}
+
+.header a {
+    color: #000000; /* 控制标题栏颜色 */
+    text-decoration: none; /* 去掉标题栏下划线 */
+
+}
+
+/* 头部左右分配90: 10 */
+
+/* 头部参数-左侧 */
+.head_top {
+    display: flex; /* 水平居中 */
+    height: 100%;
+    width: 80%; /* 调整为 padding 兼容的宽度 */
+
+    align-items: center; /* 垂直居中 */
+    padding: 0px 20px;
+
+    margin-left: 220px;
+    box-sizing: border-box; /* 包含边框 */
+
+    /* background-color: blueviolet; */
+
+}
+
+.head_top p {
+    /* font-family: 黑体 ; 设置字体 */
+    /* 字体颜色: color: #000000; */
+    font-size: 22px; /* 设置字体大小 */
+    font-weight: 1000; /* 设置字体粗细 */
+    
+    padding-right: 10px;
+    padding-left: 10px;
+
+    /* background-color: brown; */
+
+}
+
+/* 小屏左移，防止崩溃 */
+@media (max-width: 768px) {
+    .header {
+        padding-left: 5%; /* 缩小右移距离 */
+    }
+    .head_top {
+        width: 80%;
+    }
+    .head_right {
+        width: 10%;
+        padding-right: 5px;
+    }
+}
+
+/* 搜索框 */
+.search-container {
+    height: 100%;
+    width: 20%;
+
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* 图标固定在右边 */
+    width: 200px; /* 设置容器宽度 */
+
+    /* background-color: blueviolet; */
+}
+
+.search-input {
+    position: absolute;
+    right: 40px; /* 离图标一定距离 */
+    width: 0;
+    opacity: 0;
+    padding: 6px 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: width 0.3s ease, opacity 0.3s ease;
+    z-index: 1;
+}
+
+.search-input.active {
+    width: 160px;
+    opacity: 1;
+
+    margin-top: 4px;
+
+    /* background-color: chocolate; */
+}
+
+.search-icon {
+    margin-top: 8px;
+    margin-right: 5px;
+
+    font-size: 20px;
+    background: none;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    z-index: 2;
+
+    /* background-color: aquamarine; */
+}
+
+
+/* 头部-右侧 */
+.head_right {
+    height: 100%;
+    width: 50%;
+
+    display: flex;
+
+    align-items: center; /* 垂直居中 */
+
+    padding-left: 5px;
+    /* justify-content: flex-end;  */ /* 水平居右 */
+
+    /* background-color: aqua; */
+}
+
+/* 初始化背景图 */
+.initial {
+    /* 初始100vh高度的空行 */
+    margin-top: 100vh;
+}
+
+.initial_circle {
+    /* 5px的圆形图标 */
+    margin-left: 100px;
+    display: flex;
+
+}
+
+.circle_1 {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%; /* 圆形 */
+    background-color: rgb(255, 255, 255);
+
+    margin-left: 12px;
+
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* 阴影 */
+
+}
+
+.circle_2 {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%; /* 圆形 */
+    background-color: rgb(227, 118, 162);
+
+    margin-left: 12px;
+
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* 阴影 */
+
+}
+
+.circle_3 {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%; /* 圆形 */
+    background-color: rgb(73, 91, 226);
+
+    margin-left: 12px;
+
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* 阴影 */
+
+}
+
+.circle_4 {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%; /* 圆形 */
+    background-color: rgb(220, 145, 7);
+
+    margin-left: 12px;
+
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* 阴影 */
+
+}
+
+/* 个人介绍 */
+.project { 
+    height: 500px;
+    width: auto;
+    background-color: white;
+    display: flex;
+    /* 上下间间距 */
+    justify-content: center; /* 水平居中 */
+    align-items: center;
+
+    margin-top: auto;
+    margin-bottom: auto;
+
+}
+
+.project h1 {
+    font-size: 50px;
+    padding-left: 95px;
+}
+
+
+/* 主题 */
+.container {
+    display: flex; /* 弹性布局 */
+    justify-content: flex-start; /* 水平居中 */
+    align-items: flex-start; /* 垂直居中 */
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+/* 只要两边都设置auto，那么两边的元素就自动会居中 */
+
+.sidebar {
+    margin-left: 20px;
+    margin-right: auto;
+}
+
+.sidebar_1 {
+    width: 300px;
+    height: 500px;
+    background-color: rgb(235, 235, 255);
+    border-radius: 5px; /* 可选：图片圆角 */
+}
+
+.sidebar_2  {
+    width: 300px;
+    height: 300px;
+    background-color: rgb(235, 235, 255);
+
+    margin-top: 25px;
+    border-radius: 5px; /* 可选：图片圆角 */
+
+    display: flex; /* 内部格式堆叠 */
+}
+
+.theme {
+    width: 800px;
+    height: auto;
+    background-color: rgb(255, 255, 255);
+    padding: 10px;
+    height: auto;
+
+    /* 小屏模式，文章占据主体，侧边栏移到下面 */
+
+    margin-left: auto;
+    border-radius: 5px; /* 可选：图片圆角 */
+
+    /* background-color: darksalmon; */
+    
+}
+
+.theme hr {
+    /* 设置颜色 */
+    border-color: rgb(236, 236, 236);
+    border-style: solid;
+}
+
+/* 文章 */
+.acticle {
+    height: auto;
+    width: auto;
+    margin-block: 10px; /* 上下边距 block意思是 块元素 */
+    padding: 15px;
+
+    border-radius: 5px;  /* 页面圆角 */
+    background-color: white;
+}
+
+.acticle a {
+    text-decoration: none;
+}
+
+.acticle_brief_picture {
+    /* 内部块元素不换行 */
+    display: flex; /* ← 横向排列子元素 */
+    height: 180px;
+    width: 100%;
+
+    /* background-color: blueviolet; */
+
+}
+
+/* 文章-简介（左边） */
+.acticle_brief {
+    height: 100%;
+    width: 70%;
+    box-sizing: border-box; /* 宽度包含边框 */
+    font-size: 15px;
+
+    /* 超出内容显示省略号 */
+    overflow: hidden; /* 隐藏超出部分 */
+    text-overflow: ellipsis; /* 省略号 */
+
+    padding: 15px;
+
+    padding-bottom: 25px;
+
+    /* background-color: aquamarine; */
+
+
+}
+
+/* 文章-图片（右边） */
+.acticle_picture {
+    height: auto;
+    width: 30%;
+    display: flex;
+    
+    align-items: center; /* 上下居中 */
+    justify-content: center; /* 左右居中 */
+
+    /* 超出修正  */
+    overflow: hidden; /*  可选：超出部分隐藏 */
+    text-overflow: ellipsis; /*  可选：超出部分显示省略号 */
+    white-space: nowrap; /*  可选：不换行 */
+
+    
+    /* background-color: antiquewhite; */
+
+}
+
+.acticle_picture img {
+    width: 250px;
+    height: auto;
+
+    /* 超出修正  */
+    overflow: hidden; /*  可选：超出部分隐藏 */
+    text-overflow: ellipsis; /*  可选：超出部分显示省略号 */
+    white-space: nowrap; /*  可选：不换行 */
+
+    border-radius: 5px; /* 可选：图片圆角 */
+}
+
+.acticle_title {
+    height: 20%;
+    width: auto;
+
+    font-size: 20px;
+    font-weight: bold; /* 加粗 */
+
+    /* 上下居中 */
+    display: flex;
+    align-items: center;
+
+    /* 字体 */
+    
+    /* background-color: aqua; */
+    
+}
+
+.acticle_brief_content {
+    height: 80%;
+    width: auto;
+    
+    /* background-color: cornflowerblue; */
+}
+
+.acticle_buttom {
+    width: 100%;
+    height: 50px;
+    display: flex;
+
+    /* background-color: beige; */
+
+    border-radius: 5px;
+
+    /* 左右居中 */
+    justify-content: center;
+    align-items: center;
+}
+
+.pages ul li {
+    margin-inline: 5px;
+
+    list-style: none; /* 去掉列表的点 */
+    display: inline-block; /* 水平排列 */
+
+    /* background-color: blueviolet; */
+}
+
+.pages a{
+    /* 去掉下划线 */
+    text-decoration: none;
+
+}
+
+.detailed {
+    /* width: 1150px;
+    height: 100px;
+
+
+    margin-left: 190px;
+
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px; */
+
+    /* 和主题内容的宽度和位置一致 */
+    width: 1150px;
+    height: 100px;
+
+    margin-left: 190px;
+
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+}
+
+
+/* 底部 */
+.flooter {
+    width: auto;
+    height: 200px;
+    margin-top: 50px;
+    font-size: 13px;
+    padding-top: 50px;
+    
+    color: #999;
+
+    /* 网页实现不换行隐藏 */
+    display: flex; /* 水平排列,默认是垂直排列,flex是弹性布局,可以设置子元素的排列方式,默认是水平排列 */
+    flex-wrap: nowrap; /* 不换行 */
+    overflow: hidden; /* 隐藏超出部分 */
+    white-space: nowrap; /* 不换行 */
+    text-overflow: ellipsis; /* 超出部分隐藏 */
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+
+    text-align: center; /* 文字居中 */
+    background-color: white;
+}
+
+.flooter ul li {
+    /* 垂直居中 */
+    padding: 0;
+    margin: 0 10px;
+
+    list-style: none; /* 去掉列表的点 */
+    display: inline-block; /* 水平排列 */
+}
+
+.flooter a {
+    color: #999;
+    text-decoration: none; /* 去掉下划线 */
+
+}
+
+

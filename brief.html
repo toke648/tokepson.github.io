@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tokepson Web</title>
+    <link rel="stylesheet" href="brief.css">
+    <link rel="shortcut icon" href="./bitbug_favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullpage.js/dist/fullpage.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fullpage.js/dist/fullpage.min.js"></script>
+    <!-- live2d -->
+    <!-- <script src="https://fastly.jsdelivr.net/npm/live2d-widgets@0/autoload.js"></script> -->
+
+</head>
+
+<!-- 
+    方案一：
+    视觉效果
+    第一页 个人介绍 + 炫技 + 分块
+    第二页 个人经历
+    第二页 个人作品（轮转式）
+    第三页 个人爱好
+
+    ......
+    底部
+
+    方案二：
+    网址介绍 + 个人经历（个人网站） 下拉标签
+    收集到的 实用工具 + 优秀作品：
+    个人认为最好的动画短片
+
+    ......
+    个人作品
+    个人介绍 + 联系方式
+    底部 上回标签
+
+-->
+
+<body>
+    <!-- 
+        垂直居中 align-items: center;  
+        文本居中 text-align: center;
+    -->
+
+    <script>
+        // 触摸字体变淡
+        $('.header a').hover(function () {
+            $(this).css('color', '#fff');
+        }, function () {
+            $(this).css('color', '#000');
+        });
+    </script>
+
+    <div id="fullpage">
+
+        <div class="section">
+            <!-- <h1 color="blue">Hello Wrold</h1> -->
+            <div class="project">
+                <h1>Hello Wrold</h1>
+                <p></p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="project">
+                <h1>网址介绍 & 个人经历（个人网站）</h1>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="project">
+                <h1>实用工具 & 优秀作品</h1>
+            </div>
+        </div>
+
+        <div class="section">
+            <!-- 待定 -->
+            <div class="project"> 
+                <h1>Porter Robinson & Madeon - Shelter</h1>
+                <!-- <p>个人认为最好的动画短片</p> -->
+                <!-- 参数：width 宽度 height 高度 type 视频类型 controls 是否显示控制条 autoPlay 是否自动播放 loop 是否循环 muted 是否静音 -->
+                <video 
+                    id="showvedio" 
+                    src="./Porter Robinson & Madeon - Shelter.mp4" 
+                    width="65%" 
+                    height="100%" 
+                    type="video/mp4" 
+                    controls 
+                    playsinline
+                    poster="./maxresdefault.webp"
+                ></video>
+            </div>
+
+            <!-- 视频播放 -->
+            <script>
+                const video = document.getElementById('showvedio');
+
+                // 创建观察器
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                    if (entry.isIntersecting && entry.intersectionRatio === 1) {
+                        // 视频完全进入视口
+                        video.play();
+                        observer.unobserve(video); // 取消后续观察，停止播放
+                    } else {
+                        // 离开视口时可以暂停（可选）
+                        video.pause();
+                    }
+                    });
+                }, {
+                    threshold: 1.0  // 只有100%可见才触发
+                });
+
+                observer.observe(video); // 观察视频元素,自动播放
+            </script>
+        </div>
+
+        <div class="section">
+            <div class="project">
+                <h1>个人作品（轮转式）</h1>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="project">
+                <h1>个人介绍 & 联系方式</h1>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="initial"></div> <!-- 初始化背景图片 -->
+            <!-- 底部 -->
+            <div class="flooter">
+                <ul>
+                    <li>© 2023 Tokepson</li>
+
+                    <a href="mailto:1697380298@qq.com">1697380298@qq.com</a>
+
+                    <li><a href="https://github.com/toke648">Github</a></li>
+                    <li><a href="https://blog.csdn.net/qq_63036514?type=blog">CDSN</a></li>
+                    <li><a href="https://space.bilibili.com/513658479?spm_id_from=333.1007.0.0">Bilibili</a></li>
+                    
+                    <p>个人网址 运行环境由 github page 支持</p>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        new fullpage('#fullpage', {
+            autoScrolling: true,
+            navigation: true,  // 显示右侧小圆点
+        });
+    </script>
+
+</body>
+</html>

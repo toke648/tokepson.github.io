@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tokepson Web</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="index.css">
     <link rel="shortcut icon" href="./bitbug_favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullpage.js/dist/fullpage.min.css">
     <script src="https://cdn.jsdelivr.net/npm/fullpage.js/dist/fullpage.min.js"></script>
     <!-- live2d -->
-    <script src="https://fastly.jsdelivr.net/npm/live2d-widgets@0/autoload.js"></script>\
+    <script src="https://fastly.jsdelivr.net/npm/live2d-widgets@0/autoload.js"></script>
 
+    <!-- 樱花飘舞效果 -->
+    <!-- <script src="https://player.xfyun.club/js/yinghua.js"></script> -->
 </head>
 <body>
     <!-- 
@@ -21,12 +23,12 @@
     <!-- 导航栏 -->
     <div class="header">
         <div class="head_top">
-            <p><a href="index.html">Tokepson</a><p>
+            <p><a href="index.html">Tokepson 的博客</a><p>
 
             <div class="head_left">
                 <ul>
-                    <li><a href="index.html">介绍</a></li>
-                    <li><a href="./data/blog.html">博客</a></li>
+                    <li><a href="./brief.html">介绍</a></li>
+                    <li><a href="./index.html">博客</a></li>
                     <!-- <li><a href="./data/music.html">音乐</a></li>
                     <li><a href="./data/paint.html">绘画</a></li>
                     <li><a href="./data/music1.html">代码</a></li>
@@ -37,12 +39,41 @@
             </div>
 
         </div>
+
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search...">
+            <button class="search-icon" id="searchToggle">
+                <img src="./搜索.png" height="23px" width="auto">
+            </button>
+        </div>
+
+        <script>
+            const toggle = document.getElementById('searchToggle');
+            const input = document.getElementById('searchInput');
+
+            toggle.addEventListener('click', () => {
+                input.classList.toggle('active');
+                if (input.classList.contains('active')) {
+                input.focus();
+                } else {
+                input.blur();
+                }
+            });
+        </script>
     
         <div class="head_right">
             <ul>
                 <li><a href="">登录</a></li>
                 <li><a href="">注册</a></li>
             </ul>
+
+            <!-- 5px的圆形图案 -->
+             <div class="initial_circle">
+                <div class="circle_1"></div>
+                <div class="circle_2"></div>
+                <div class="circle_3"></div>
+                <div class="circle_4"></div>
+            </div>
         </div>
 
     </div>
@@ -58,23 +89,46 @@
 
     <div class="initial"></div> <!-- 初始化背景图片 -->
 
-    <!-- <div id="fullpage">
-        <div class="section">第一页</div>
-        <div class="section">第二页</div>
-        <div class="section">第三页</div>
-    </div>
-
-    <script>
-        new fullpage('#fullpage', {
-            autoScrolling: true,
-            navigation: true,  // 显示右侧小圆点
-        });
-    </script> -->
-
     <!-- 待定 -->
     <div class="project"> 
-        
+        <h1>Porter Robinson & Madeon - Shelter</h1>
+        <!-- <p>个人认为最好的动画短片</p> -->
+        <!-- 参数：width 宽度 height 高度 type 视频类型 controls 是否显示控制条 autoPlay 是否自动播放 loop 是否循环 muted 是否静音 -->
+        <video 
+            id="showvedio" 
+            src="./Porter Robinson & Madeon - Shelter.mp4" 
+            width="auto" 
+            height="100%" 
+            type="video/mp4" 
+            controls 
+            playsinline
+            poster="./maxresdefault.webp"
+        ></video>
     </div>
+
+    <!-- 视频播放 -->
+    <script>
+        const video = document.getElementById('showvedio');
+
+        // 创建观察器
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+            if (entry.isIntersecting && entry.intersectionRatio === 1) {
+                // 视频完全进入视口
+                video.play();
+                observer.unobserve(video); // 取消后续观察，停止播放
+            } else {
+                // 离开视口时可以暂停（可选）
+                video.pause();
+            }
+            });
+        }, {
+            threshold: 1.0  // 只有100%可见才触发
+        });
+
+        observer.observe(video); // 观察视频元素,自动播放
+    </script>
+
 
     <!-- 透明度渐变 -->
     <script>
@@ -105,96 +159,232 @@
         });
     </script>
 
-    <!-- <script>
-        let lastScrollTop = 0; // 上一次的滚动位置
-        const header = document.querySelector('.header'); // 选择导航栏元素
+    <div class="container">
+        <!-- 主体 -->
+        <div class="theme">
+            <!-- 
+            参数:
+            acticle_content : 文章内容
+            acticle : 文章
+            theme : 主体
+            
+            -->
+            <h1>Blog post</h1>
 
-        window.addEventListener('scroll', () => {
-            const currentScroll = window.scrollY; // 当前滚动位置
-            if (currentScroll > lastScrollTop) {
-                // 向下滚动，隐藏导航栏
-                header.style.top = '-60px';
-            } else {
-                // 向上滚动，显示导航栏
-                header.style.top = '0';
-            }
-            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // 防止负值
-        });
-    </script> -->
+            <hr/>
 
-    <!-- 侧边栏 -->
-    <!-- <div class="sidebar"></div> -->
-
-    <!-- 主体 -->
-    <div class="theme">
-        <!-- 
-        参数:
-        acticle_content : 文章内容
-        acticle : 文章
-        theme : 主体
-        
-        -->
-        <p style="font-size: xx-large;">Blog post</p>
-
-        <div class="acticle">
+            <div class="acticle">
                 <p>||o(*°▽°*)o|Ю [有人吗?]</p>
-        </div>
-
-        <div class="acticle">
-            <p>||o(*°▽°*)o|Ю [有人吗?]</p>
-
-        </div>
-
-        <div class="acticle">
-            <h1>Music</h1>
-            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=2026565329&auto=1&height=66"></iframe>
-    
-            <div class="acticle_content">
-                <h1>Section Title</h1>
-    
-                <p>Section Content</p>
-    
-                <h1>Token</h1>
-                <p>Token is a type of cryptocurrency that is used to pay for transaction fees on the Ethereum network. It is also used to pay for services on the network, such as smart contracts and decentralized applications. Tokens can be created by anyone, and can represent any type of asset, such as a digital collectible, a voting right, or a share in a company. Tokens are typically created using the ERC-20 standard, which defines a set of rules that all tokens on the Ethereum network must follow.</p>
             </div>
 
-        </div>
+            <hr/>
 
-        <div class="acticle">
+            <div class="acticle">
+                <p>||o(*°▽°*)o|Ю [有人吗?]</p>
+
+            </div>
+
+            <hr/>
+
+            <div class="acticle">
+                <h1>音乐卡片</h1>
+                <!-- 自动播放 -->
+                
+                <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=2026565329&auto=1&height=66"></iframe>
+                <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1859652717&auto=1&height=66"></iframe>
+                <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=2098478355&auto=1&height=66"></iframe>            
+                <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=2093257373&auto=1&height=66"></iframe>
+
+
+                <div class="acticle_content">
+                    <h1>Section Title</h1>
+        
+                    <p>Section Content</p>
+        
+                    <h1>Token</h1>
+                    <p>Token is a type of cryptocurrency that is used to pay for transaction fees on the Ethereum network. It is also used to pay for services on the network, such as smart contracts and decentralized applications. Tokens can be created by anyone, and can represent any type of asset, such as a digital collectible, a voting right, or a share in a company. Tokens are typically created using the ERC-20 standard, which defines a set of rules that all tokens on the Ethereum network must follow.</p>
+                </div>
+
+            </div>
+
+            <hr/>
+
+
             <!-- <img src="../images/image.png"> -->
-             <div class="acticle_brief_picture">
+            <div class="acticle_brief_picture">
+                <div class="acticle_picture"> 
+                    <a href="https://search.bilibili.com/all?keyword=If%20you%20want%20it&from_source=webtop_search&spm_id_from=333.1369&search_source=5">
+                        <img src="../images/image.png">
+                    </a>
+                </div>
+
                 <div class="acticle_brief">
                     <div class="acticle_title">
-                        <p>Yamato</p>
+                        <a href="https://search.bilibili.com/all?keyword=If%20you%20want%20it&from_source=webtop_search&spm_id_from=333.1369&search_source=5">
+                            <p>If you want it</p>
+                        </a>
                     </div>
 
-                    <p>Hey Vergil, your portal-opening days are over. Give me the Yamato.
-                        you want it, then you’ll have to take it. But you already knew that.
-                        I had a feeling you’d say that.
-                        many times have we fought ?
-                        Hard to say. It's the only the memory I have of us since we were kids. 
-                        Time to finish this, Vergil. Once and for all.
-                    </p>  
+                    <div class="acticle_brief_content">
+                        <p>Hey Vergil, your portal-opening days are over. Give me the Yamato.
+                            you want it, then you’ll have to take it. But you already knew that.
+                            I had a feeling you’d say that.
+                            many times have we fought ?
+                            Hard to say. It's the only the memory I have of us since we were kids. 
+                            Time to finish this, Vergil. Once and for all.
+                        </p>  
+                    </div>                        
 
                 </div>
 
-                <div class="acticle_picture"> 
-                        <img src="../images/image.png">
+            </div>
+
+            <hr/>
+
+            <div class="acticle_brief_picture">
+                <div class="acticle_picture">
+                    <a href="https://home.cnblogs.com/u/safjh">
+                        <img src="./48a5e33fe8d319825782f4a8d1edcf6.jpg">
+                    </a>
                 </div>
-             </div>
+                <div class="acticle_brief"> 
+                    <div class="acticle_title">
+                        <a href="https://home.cnblogs.com/u/safjh">
+                            <p>
+                                测试
+                            </p>
+                        </a>
+                    </div>
 
+                    <div class="acticle_brief_content">
+                        <p>
+                            文章格式
+                        </p>  
+                    </div>
+                </div>
+
+            </div>
+
+            <hr>
+
+            <div class="acticle_brief_picture">
+                <div class="acticle_picture">
+                    <a href="https://blog.csdn.net/qq_63036514/article/details/147930870?spm=1001.2014.3001.5502">
+                        <img src="./d65facf0c4713f2a0bb988d865794c4.jpg">
+                    </a>
+                </div>
+                <div class="acticle_brief"> 
+                    <div class="acticle_title">
+                        <a href="https://blog.csdn.net/qq_63036514/article/details/147930870?spm=1001.2014.3001.5502">
+                            <p>
+                                Transformer架构
+                            </p>
+                        </a>
+                    </div>
+
+                    <div class="acticle_brief_content">
+                        <p>
+                            文章格式
+                        </p>  
+                    </div>
+                </div>
+
+            </div>
+
+
+            <hr/>
+
+            <div class="acticle">
+                <h1>History</h1>
+                <p>过去练手写的网页</p>
+                <ul>
+                    <li><p><a href="./history/index.html">2024.1.12</a> 复习Html+Css写的网页</p></li>
+                    <li><p><a href="./ChatGpt/汉堡隐藏栏.html">汉堡隐藏栏</a>  实现汉堡隐藏的效果</p></li>
+                    <li><p><a href="./data/test.html">测试</a>  功能测试</p></li>
+                    <li><p><a href="./data/music.html">音乐</a></p></li>
+                    <li><p><a href="./data/paint.html">绘画</a></p></li>
+                    <li><p><a href="./data/music1.html">代码</a></p></li>
+                    <li><p><a href="./data/game.html">游戏</a></p></li>
+                    <li><p><a href="./data/history.html">历史</a></p></li>
+                </ul>
+
+            </div>
+
+            <hr>
+
+            <div class="acticle_brief_picture">
+                <div class="acticle_picture">
+                    <a href="https://blog.csdn.net/qq_63036514/article/details/147930870?spm=1001.2014.3001.5502">
+                        <img src="./d65facf0c4713f2a0bb988d865794c4.jpg">
+                    </a>
+                </div>
+                <div class="acticle_brief"> 
+                    <div class="acticle_title">
+                        <a href="https://blog.csdn.net/qq_63036514/article/details/147930870?spm=1001.2014.3001.5502">
+                            <p>
+                                Transformer架构
+                            </p>
+                        </a>
+                    </div>
+
+                    <div class="acticle_brief_content">
+                        <p>
+                            文章格式
+                        </p>  
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="acticle_buttom">
+                <div class="pages">
+                    <ul>
+                        <li>
+                            <a href="#">上一页</a>
+                        </li>
+                        <li>
+                            <a href="#">1</a>
+                        </li>
+                        <li>
+                            <a href="#">2</a>
+                        </li>
+                        <li>
+                            <a href="#">3</a>
+                        </li>
+                        <li>
+                            <a href="#">4</a>
+                        </li>
+                        <li>
+                            <a href="#">5</a>
+                        </li>
+                        <li>
+                            <a href="#">6</a>
+                        </li>
+
+                        <li>
+                            <a href="#">下一页</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="more">
+                </div>
+            </div>
         </div>
 
-        <div class="acticle">
-            <h1>History</h1>
-            <p>这里记录着我过去所写过的网页</p>
-            <ul>
-                <li><p><a href="./history/index.html">2024.1.12</a> 复习Html+Css写的网页</p></li>
-                <li><p><a href="./ChatGpt/汉堡隐藏栏.html">汉堡隐藏栏</a>  实现汉堡隐藏的效果</p></li>
-                <li><p><a href="./data/test.html">测试</a>  功能测试</p></li>
-            </ul>
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <div class="sidebar_1">
+            </div>
 
+            <div class="sidebar_2">
+            </div>
         </div>
+    </div>
+
+    <div class="detailed">
+
     </div>
 
     <div class="initial"></div> <!-- 初始化背景图片 -->

@@ -1,0 +1,98 @@
+/* 我不得不提一句，
+    写的时候记得分配好每个部分的格式
+    不然到后面乱了整理都整理不过来 
+
+    (找的时候记得用Ctrl+F快速搜索)
+
+    参数：头部、导航栏、主体、文章、底部
+
+    通用主体参数定义
+    默认边距： margin: 0;
+    横向排列： display: flex;
+
+    默认上下边距为
+    margin-top: 100px;
+    margin-bottom: 100px;
+
+    小贴士：
+    最好使用wight或height调整div的宽高，因为flex布局会自动填充
+    如果使用padding或margin调整div的宽高，则div的宽高会超出div的边界
+    造成显示不全、挤压等样式问题
+
+*/
+
+/* 头部、通用主体参数定义 */
+body {
+    background-image: url(./images/99459661_p0.jpg);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: Arial, sans-serif;
+    
+    margin: 0; /* 确保没有额外空白 */
+
+}
+
+/* 个人介绍 */
+.project { 
+    height: 100vh;
+    background-color: white;
+    display: flex; /* 水平垂直居中 */
+
+    /* 上下间间距 */
+    justify-content: center; /* 水平居中 */
+    align-items: center;
+
+}
+
+.project h1 {
+    font-size: 50px;
+
+    padding: 25px;
+    margin-left: 25px;
+}
+
+/* 底部 */
+.flooter {
+    width: 100%;
+    height: 200px;
+    /* margin-top: 540px; */
+    /* 处于页面的底部 */
+    position: absolute; /* 绝对定位 */
+    bottom: 0;
+
+    font-size: 13px;
+    padding-top: 50px;
+    
+    color: #999;
+
+    /* 网页实现不换行隐藏 */
+    display: flex; /* 水平排列,默认是垂直排列,flex是弹性布局,可以设置子元素的排列方式,默认是水平排列 */
+    flex-wrap: nowrap; /* 不换行 */
+    overflow: hidden; /* 隐藏超出的文本 */
+    white-space: nowrap; /* 不换行 */
+    text-overflow: ellipsis; /* 超出的文本显示省略号 */
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+
+    text-align: center;
+    background-color: white;
+    /* box-sizing:border-box; */
+}
+
+.flooter ul li {
+    /* 垂直居中 */
+    padding: 0;
+    margin: 0 10px;
+
+    list-style: none; /* 去掉列表的点 */
+    display: inline-block; /* 水平排列 */
+}
+
+.flooter a {
+    color: #999;
+    text-decoration: none; /* 去掉下划线 */
+
+}
+
+
