@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tokepson Web</title>
     <link rel="stylesheet" href="index.css">
+    <!-- <link rel="stylesheet" href="./assets/waifu.css"> -->
     <link rel="shortcut icon" href="./bitbug_favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullpage.js/dist/fullpage.min.css">
     <script src="https://cdn.jsdelivr.net/npm/fullpage.js/dist/fullpage.min.js"></script>
     <!-- live2d -->
-    <script src="https://fastly.jsdelivr.net/npm/live2d-widgets@0/autoload.js"></script>
-
+    <!-- <script src="https://fastly.jsdelivr.net/npm/live2d-widgets@0/autoload.js"></script> -->
     <!-- 樱花飘舞效果 -->
     <!-- <script src="https://player.xfyun.club/js/yinghua.js"></script> -->
 </head>
@@ -29,11 +29,6 @@
                 <ul>
                     <li><a href="./brief.html">介绍</a></li>
                     <li><a href="./index.html">博客</a></li>
-                    <!-- <li><a href="./data/music.html">音乐</a></li>
-                    <li><a href="./data/paint.html">绘画</a></li>
-                    <li><a href="./data/music1.html">代码</a></li>
-                    <li><a href="./data/game.html">游戏</a></li>
-                    <li><a href="./data/history.html">历史</a></li> -->
                 </ul>
 
             </div>
@@ -159,14 +154,56 @@
         });
     </script>
 
+    <!-- 看板娘 -->
+    <!-- waifu-tips.js 依赖 JQuery 库 -->
+    <script src="assets/jquery.min.js?v=3.3.1"></script>
+    
+    <!-- 实现拖动效果，需引入 JQuery UI -->
+    <script src="assets/jquery-ui.min.js"></script>
+    
+    <!-- 使用 aotuload.js 引入看板娘 -->
+    <script src="assets/autoload.js?v=1.4.2"></script>
+
+    <script src="./assets/waifu-tips.js"></script>
+    <script src="./assets/live2d.js"></script>
+    
+    <script type="text/javascript">
+        live2d_settings['modelId'] = 3;
+        live2d_settings['modelTexturesId'] = 0;
+        live2d_settings['modelStorage'] = true;         // 记录 ID (刷新后恢复)，可选 true(真), false(假)
+        live2d_settings['modelRandMode'] = 'switch';     // 模型切换，可选 'rand'(随机), 'switch'(顺序)
+        live2d_settings['modelTexturesRandMode'] = 'rand';       // 材质切换，可选 'rand'(随机), 'switch'(顺序)
+        live2d_settings['waifuSize'] = '280x250';    // 看板娘大小，例如 '280x250', '600x535'
+        live2d_settings['waifuEdgeSide'] = 'left:0';     // 看板娘贴边方向，例如 'left:0'(靠左 0px), 'right:30'(靠右 30px)
+        live2d_settings['waifuDraggable'] = 'axis-x';    // 拖拽样式，例如 'disable'(禁用), 'axis-x'(只能水平拖拽), 'unlimited'(自由拖拽)
+        live2d_settings['waifuDraggableRevert'] = true;         // 松开鼠标还原拖拽位置，可选 true(真), false(假)
+
+        // 其他杂项设置
+        live2d_settings['l2dVersion'] = '1.4.2';        // 当前版本
+        live2d_settings['l2dVerDate'] = '2018.11.12'; // 版本更新日期
+        live2d_settings['homePageUrl'] = 'index.html';       // 主页地址，可选 'auto'(自动), '{URL 网址}'
+        live2d_settings['aboutPageUrl'] = 'https://www.fghrsh.net/post/123.html';   // 关于页地址, '{URL 网址}'
+
+    	initModel("https://www.example.com/path/to/waifu-tips.json")
+    </script>
+
+
+    <!-- 主体 -->
     <div class="container">
-        <!-- 主体 -->
         <div class="theme">
             <!-- 
             参数:
-            acticle_content : 文章内容
-            acticle : 文章
-            theme : 主体
+                theme : 主体主题
+                acticle_brief : 文章简介
+                acticle_picture : 文章图片
+                acticle_title : 文章标题
+                acticle_brief_content : 文章简介内容
+                acticle_buttom : 文章按钮
+                pages : 页脚
+                detailed : 详细页
+            参数:
+                sidebar_1 : 左侧栏
+                sidebar_2 : 右侧栏
             
             -->
             <h1>Blog post</h1>
