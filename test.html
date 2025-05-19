@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试 第1篇文章</title>
+    <link rel="stylesheet" href="./index.css">
+    <!-- <link rel="stylesheet" href="./assets/waifu.css"> -->
+    <link rel="shortcut icon" href="./bitbug_favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullpage.js/dist/fullpage.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fullpage.js/dist/fullpage.min.js"></script>
+    <!-- live2d -->
+    <!-- <script src="https://fastly.jsdelivr.net/npm/live2d-widgets@0/autoload.js"></script> -->
+    <!-- 樱花飘舞效果 -->
+    <!-- <script src="https://player.xfyun.club/js/yinghua.js"></script> -->
+</head>
+<body>
+    <!-- 
+        垂直居中 align-items: center;  
+        文本居中 text-align: center;
+    -->
+
+    <!-- 导航栏 -->
+    <div class="header">
+        <div class="head_top">
+            <p><a href="index.html">Tokepson 的博客</a><p>
+
+            <div class="head_left">
+                <ul>
+                    <li><a href="./brief.html">介绍</a></li>
+                    <li><a href="./index.html">博客</a></li>
+                </ul>
+
+            </div>
+
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search...">
+            <button class="search-icon" id="searchToggle">
+                <img src="./搜索.png" height="23px" width="auto">
+            </button>
+        </div>
+
+        <script>
+            const toggle = document.getElementById('searchToggle');
+            const input = document.getElementById('searchInput');
+
+            toggle.addEventListener('click', () => {
+                input.classList.toggle('active');
+                if (input.classList.contains('active')) {
+                input.focus();
+                } else {
+                input.blur();
+                }
+            });
+        </script>
+    
+        <div class="head_right">
+            <ul>
+                <li><a href="">登录</a></li>
+                <li><a href="">注册</a></li>
+            </ul>
+
+            <!-- 5px的圆形图案 -->
+             <div class="initial_circle">
+                <div class="circle_1"></div>
+                <div class="circle_2"></div>
+                <div class="circle_3"></div>
+                <div class="circle_4"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- 透明度渐变 -->
+    <script>
+        const header = document.querySelector('.header');
+        let lastScrollTop = 0;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.scrollY;
+            const scrollHeight = document.documentElement.scrollHeight;
+            const windowHeight = window.innerHeight;
+
+            // 判断是否在顶部或底部
+            const atTop = currentScroll === 0;
+            const atBottom = currentScroll + windowHeight >= scrollHeight;
+
+            if (atTop || atBottom) {
+                // 顶部或底部，恢复正常透明度
+                header.style.opacity = '1';
+            } else if (currentScroll > lastScrollTop) {
+                // 向下滚动，变淡
+                header.style.opacity = '0.3';
+            } else {
+                // 向上滚动，恢复正常
+                header.style.opacity = '1';
+            }
+
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        });
+    </script>
+
+    <!-- 看板娘 -->
+    <!-- waifu-tips.js 依赖 JQuery 库 -->
+    <script src="assets/jquery.min.js?v=3.3.1"></script>
+    
+    <!-- 实现拖动效果，需引入 JQuery UI -->
+    <script src="assets/jquery-ui.min.js"></script>
+    
+    <!-- 使用 aotuload.js 引入看板娘 -->
+    <script src="assets/autoload.js?v=1.4.2"></script>
+
+    <script src="./assets/waifu-tips.js"></script>
+    <script src="./assets/live2d.js"></script>
+    
+    <script type="text/javascript">
+        live2d_settings['modelId'] = 3;
+        live2d_settings['modelTexturesId'] = 0;
+        live2d_settings['modelStorage'] = true;         // 记录 ID (刷新后恢复)，可选 true(真), false(假)
+        live2d_settings['modelRandMode'] = 'switch';     // 模型切换，可选 'rand'(随机), 'switch'(顺序)
+        live2d_settings['modelTexturesRandMode'] = 'rand';       // 材质切换，可选 'rand'(随机), 'switch'(顺序)
+        live2d_settings['waifuSize'] = '280x250';    // 看板娘大小，例如 '280x250', '600x535'
+        live2d_settings['waifuEdgeSide'] = 'left:0';     // 看板娘贴边方向，例如 'left:0'(靠左 0px), 'right:30'(靠右 30px)
+        live2d_settings['waifuDraggable'] = 'axis-x';    // 拖拽样式，例如 'disable'(禁用), 'axis-x'(只能水平拖拽), 'unlimited'(自由拖拽)
+        live2d_settings['waifuDraggableRevert'] = true;         // 松开鼠标还原拖拽位置，可选 true(真), false(假)
+
+        // 其他杂项设置
+        live2d_settings['l2dVersion'] = '1.4.2';        // 当前版本
+        live2d_settings['l2dVerDate'] = '2018.11.12'; // 版本更新日期
+        live2d_settings['homePageUrl'] = 'index.html';       // 主页地址，可选 'auto'(自动), '{URL 网址}'
+        live2d_settings['aboutPageUrl'] = 'https://www.fghrsh.net/post/123.html';   // 关于页地址, '{URL 网址}'
+
+    	initModel("https://www.example.com/path/to/waifu-tips.json")
+    </script>
+
+
+    <!-- 主体 -->
+    <div class="container">
+        <!-- 需要用固定布局 -->
+        <!-- <h1>Blog post</h1>
+        <hr/> -->
+
+        <div class="container_top">
+        </div>
+
+        <hr>
+
+        <div class="container_main">
+            <div class="theme">
+                <!-- 
+                参数:
+
+                
+                -->
+                <div class="passage">
+                    <p>
+                        <a href="">首页</a>
+                        >
+                        <a href="">分类</a>
+                        >正文
+                    </p>
+
+                    <div class="passage_title">
+                        <h1>测试 第1篇文章</h1>
+
+                    </div>
+
+                    <hr>
+                    <p>分类:    
+                        <a href="">生活</a>
+                        标签:   
+                        <a href="">随笔</a>
+                        发布:2025-05-10 00:00:26
+                        评论:0
+                        阅读量:0
+                    </p>
+
+                    <div class="passage_content">
+                        <!-- 
+                            参数:
+                                passage_content : 文章内容
+                                img :  图片
+                        -->
+
+                        <div class="acticle_content">
+                            <h1>Section Title</h1>
+
+                            <p>Section Content</p>
+
+                            <h1>Token</h1>
+                            <p>Token is a type of cryptocurrency that is used to pay for transaction fees on the Ethereum network. It is also used to pay for services on the network, such as smart contracts and decentralized applications. Tokens can be created by anyone, and can represent any type of asset, such as a digital collectible, a voting right, or a share in a company. Tokens are typically created using the ERC-20 standard, which defines a set of rules that all tokens on the Ethereum network must follow.</p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <div class="sidebar_1">
+                </div>
+
+                <div class="sidebar_2">
+                </div>
+            </div>
+        </div>
+
+        <!-- <hr> -->
+
+        <div class="container_bottom">
+        </div>
+
+
+    </div>
+
+
+    <!-- 快捷上拉 -->
+    <div class="pull_menu">
+    </div>
+
+    <!-- 底部 -->
+    <div class="flooter">
+        <ul>
+            <li>© 2023 Tokepson</li>
+
+            <a href="mailto:1697380298@qq.com">1697380298@qq.com</a>
+
+            <li><a href="https://github.com/toke648">Github</a></li>
+            <li><a href="https://blog.csdn.net/qq_63036514?type=blog">CDSN</a></li>
+            <li><a href="https://space.bilibili.com/513658479?spm_id_from=333.1007.0.0">Bilibili</a></li>
+            
+            <p>个人网址 运行环境由 github page 支持</p>
+        </ul>
+    </div>
+</body>
+</html>

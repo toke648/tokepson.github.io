@@ -287,8 +287,7 @@ body {
 
 /* 主题 */
 .container {
-    width: 1350px; /* 自定义页面宽高 */
-    height: auto; /* 自动页面宽高，不适用任何设备 */
+    width: 1350px;
 
     /* 上下边距 */
     margin-top: 100px;
@@ -343,14 +342,6 @@ body {
     /* background-color: red; */
 }
 
-.passage a {
-    /* ← 两边对齐 */
-    /* justify-content: space-between;  */
-
-    text-decoration: none;
-    /* color: #000; */
-}
-
 .passage_title {
     width: 800px;
     height: 50px;
@@ -372,6 +363,7 @@ body {
 }
 
 /* 只要两边都设置auto，那么两边的元素就自动会居中 */
+
 .sidebar {
     width: auto;
     height: 1200px;
@@ -427,223 +419,6 @@ body {
     /* 设置颜色 */
     border-color: rgb(236, 236, 236);
     border-style: solid;
-}
-
-/* 文章 */
-.acticle {
-    height: auto;
-    width: auto;
-    margin-block: 10px; /* 上下边距 block意思是 块元素 */
-    padding: 15px;
-
-    border-radius: 5px;  /* 页面圆角 */
-    background-color: white;
-}
-
-.acticle a {
-    text-decoration: none;
-}
-
-.acticle_brief_picture {
-    /* 内部块元素不换行 */
-    display: flex; /* ← 横向排列子元素 */
-    height: 180px;
-    width: 100%;
-
-    justify-content: space-between; /* ← 两边对齐 */
-    /* 不需要居中 */
-
-    /* background-color: blueviolet; */
-    
-    border-radius: 10px; /* 可选：图片圆角 */
-    /* 阴影 */
-    /* box-shadow: 0px 0px 5px rgba(33, 33, 33, 0.5);  */
-
-}
-
-/* 文章-图片（右边） */
-.acticle_picture {
-    height: auto;
-    width: 260px;
-    display: flex;
-    
-    align-items: center; /* 上下居中 */
-    justify-content: center; /* 左右居中 */
-
-    /* 超出修正  */
-    overflow: hidden; /*  可选：超出部分隐藏 */
-    text-overflow: ellipsis; /*  可选：超出部分显示省略号 */
-    white-space: nowrap; /*  可选：不换行 */
-
-    
-    /* background-color: antiquewhite; */
-
-}
-
-.acticle_picture img {
-    width: 100%;
-    height: auto;
-
-    /* 超出修正  */
-    overflow: hidden; /*  可选：超出部分隐藏 */
-    text-overflow: ellipsis; /*  可选：超出部分显示省略号 */
-    white-space: nowrap; /*  可选：不换行 */
-
-    border-radius: 10px; /* 可选：图片圆角 */
-}
-
-/* 文章-简介（左边） */
-.acticle_brief {
-    height: 100%;
-    width: 70%;
-    box-sizing: border-box; /* 宽度包含边框 */
-    font-size: 15px;
-
-    display: block;
-
-    padding: 15px;
-
-    /* padding-bottom: 25px; */
-
-    /* background-color: aquamarine; */
-
-
-}
-
-.acticle_buttom_line { 
-    height: 15%;
-    width: 100%;
-
-    padding-top: 5px;
-
-    display: flex;
-    align-items: center;
-
-    /* 超出边界 */
-    overflow: hidden; /*  超出部分隐藏 */
-    text-overflow: ellipsis; /* 超出部分显示省略号 */
-    white-space: nowrap; /* 不换行 */
-
-    /* 两边对齐 */
-    justify-content: space-between; 
-
-    /* 居左侧 */
-    /* justify-content: flex-start; */
-
-    color: #afafaf;
-    font-size: 14px;
-    /* 加粗 */
-    /* font-weight: bold; */
-
-    /* 字体：黑体 */
-    font-family: "黑体";
-
-    /* background-color: rgb(255, 0, 0); */
-}
-
-/* .acticle_buttom_line ul {
-    list-style: none;
-    display: flex;
-    
-}
-
-.acticle_buttom_line li { 
-    margin-right: 10px;
-}
-
-.acticle_buttom_line a {
-    text-decoration: none;
-    color: #afafaf;
-    font-family: "黑体";
-} */
-
-.acticle_title {
-    height: 20%;
-    width: auto;
-
-    font-size: 25px;
-    font-weight: bold; /* 加粗 */
-
-    /* 上下居中 */
-    display: flex;
-    align-items: center;
-    
-    /* background-color: aqua; */
-    
-}
-
-.acticle_brief_content {
-    height: 60%;
-    width: auto;
-
-    /* 超出内容显示省略号 */
-    overflow: hidden; /* 隐藏超出部分 */
-    text-overflow: ellipsis; /* 省略号 */
-    
-    /* background-color: cornflowerblue; */
-}
-
-.acticle_brief_picture a {
-    text-decoration: none;
-    color: black;
-}
-
-.acticle_buttom {
-    width: 100%;
-    height: 50px;
-    display: flex;
-
-    /* background-color: beige; */
-
-    border-radius: 5px;
-
-    /* 左右居中 */
-    justify-content: center;
-    align-items: center;
-}
-
-.acticle_other {
-    height: 300px;
-    width: 100%;
-    
-    display: flex;
-
-    background-color: lightcoral;
-}
-
-.pages ul li {
-    margin-inline: 5px;
-
-    list-style: none; /* 去掉列表的点 */
-    display: inline-block; /* 水平排列 */
-
-    /* background-color: blueviolet; */
-}
-
-.pages a{
-    /* 去掉下划线 */
-    text-decoration: none;
-
-}
-
-.detailed {
-    /* width: 1150px;
-    height: 100px;
-
-
-    margin-left: 190px;
-
-    background-color: rgb(255, 255, 255);
-    border-radius: 5px; */
-
-    /* 和主题内容的宽度和位置一致 */
-    width: 1150px;
-    height: 100px;
-
-    margin-left: 190px;
-
-    background-color: rgb(255, 255, 255);
-    border-radius: 5px;
 }
 
 
