@@ -1,0 +1,1289 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>强化学习贪吃蛇游戏</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#36D399',
+                        danger: '#F87272',
+                        warning: '#FBBD23',
+                        dark: '#1E293B',
+                        light: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .transition-transform-opacity {
+                transition-property: transform, opacity;
+                transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+                transition-duration: 150ms;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-gray-800 text-light min-h-screen flex flex-col">
+    <!-- 顶部导航 -->
+    <header class="bg-dark/80 backdrop-blur-md border-b border-gray-700 py-4 px-6 fixed w-full z-50 transition-all duration-300">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-gamepad text-primary text-2xl"></i>
+                <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
+                    强化学习贪吃蛇
+                </h1>
+            </div>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="#game" class="hover:text-primary transition-colors duration-200">游戏</a></li>
+                    <li><a href="#train" class="hover:text-primary transition-colors duration-200">训练</a></li>
+                    <li><a href="#about" class="hover:text-primary transition-colors duration-200">关于</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow pt-24 pb-12 px-4 md:px-6">
+        <div class="container mx-auto max-w-6xl">
+            <!-- 游戏介绍 -->
+            <section class="mb-12 text-center">
+                <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold mb-4 text-shadow">人工智能玩贪吃蛇</h2>
+                <p class="text-gray-300 max-w-3xl mx-auto mb-8">
+                    这是一个使用强化学习训练AI玩贪吃蛇的演示项目。你可以观察AI的学习过程，也可以亲自体验游戏的乐趣。
+                </p>
+                <div class="flex flex-wrap justify-center gap-4 mb-8">
+                    <div class="bg-gray-800/50 rounded-lg p-4 border border-gray-700 w-48">
+                        <div class="text-3xl font-bold text-primary mb-2" id="currentScore">0</div>
+                        <div class="text-sm text-gray-400">当前得分</div>
+                    </div>
+                    <div class="bg-gray-800/50 rounded-lg p-4 border border-gray-700 w-48">
+                        <div class="text-3xl font-bold text-secondary mb-2" id="highScoreDisplay">0</div>
+                        <div class="text-sm text-gray-400">最高记录</div>
+                    </div>
+                    <div class="bg-gray-800/50 rounded-lg p-4 border border-gray-700 w-48">
+                        <div class="text-3xl font-bold text-warning mb-2" id="trainingEpisodes">0</div>
+                        <div class="text-sm text-gray-400">训练回合</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 游戏区域和控制面板 -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- 游戏画布 -->
+                <div class="lg:col-span-2 bg-gray-800/50 rounded-xl p-4 border border-gray-700 shadow-xl">
+                    <div class="relative aspect-square w-full">
+                        <canvas id="gameCanvas" class="w-full h-full rounded-lg bg-gray-900"></canvas>
+                        <!-- 游戏开始遮罩 -->
+                        <div id="startScreen" class="absolute inset-0 bg-dark/80 rounded-lg flex flex-col items-center justify-center z-10">
+                            <h3 class="text-2xl font-bold text-primary mb-4">准备开始</h3>
+                            <p class="text-gray-300 mb-6">按空格键开始游戏</p>
+                            <div class="flex space-x-4 mb-6">
+                                <button id="playerModeButton" class="bg-primary hover:bg-primary/80 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105 flex items-center">
+                                    <i class="fa fa-user mr-2"></i> 玩家模式
+                                </button>
+                                <button id="aiModeButton" class="bg-secondary hover:bg-secondary/80 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105 flex items-center">
+                                    <i class="fa fa-robot mr-2"></i> AI模式
+                                </button>
+                            </div>
+                            <button id="startButton" class="bg-primary hover:bg-primary/80 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 flex items-center">
+                                <i class="fa fa-play mr-2"></i> 开始游戏
+                            </button>
+                        </div>
+                        <!-- 游戏结束遮罩 -->
+                        <div id="gameOverScreen" class="absolute inset-0 bg-dark/80 rounded-lg flex-col items-center justify-center z-10 hidden">
+                            <h3 class="text-2xl font-bold text-danger mb-2">游戏结束</h3>
+                            <p class="text-xl text-gray-300 mb-2">得分: <span id="finalScore">0</span></p>
+                            <p class="text-gray-400 mb-6">最高记录: <span id="highScore">0</span></p>
+                            <div class="flex space-x-4">
+                                <button id="restartButton" class="bg-primary hover:bg-primary/80 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 flex items-center">
+                                    <i class="fa fa-refresh mr-2"></i> 重新开始
+                                </button>
+                                <button id="trainButton" class="bg-warning hover:bg-warning/80 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 flex items-center">
+                                    <i class="fa fa-brain mr-2"></i> 训练AI
+                                </button>
+                            </div>
+                        </div>
+                        <!-- 训练中遮罩 -->
+                        <div id="trainingScreen" class="absolute inset-0 bg-dark/90 rounded-lg flex-col items-center justify-center z-20 hidden">
+                            <h3 class="text-2xl font-bold text-warning mb-4">AI训练中</h3>
+                            <div class="flex items-center justify-center mb-6">
+                                <div class="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                            </div>
+                            <p class="text-gray-300 mb-2">回合: <span id="trainingEpisode">0</span> / <span id="totalEpisodes">0</span></p>
+                            <p class="text-gray-300 mb-2">当前得分: <span id="trainingScore">0</span></p>
+                            <p class="text-gray-300">平均得分: <span id="trainingAvgScore">0</span></p>
+                            <button id="stopTrainingButton" class="mt-6 bg-danger hover:bg-danger/80 text-white font-bold py-2 px-6 rounded-full transition-all duration-300">
+                                停止训练
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-2">
+                        <button id="stepBackButton" class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg flex items-center justify-center transition-colors">
+                            <i class="fa fa-step-backward mr-2"></i> 上一步
+                        </button>
+                        <button id="pauseButton" class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg flex items-center justify-center transition-colors">
+                            <i class="fa fa-pause mr-2"></i> 暂停
+                        </button>
+                        <button id="resumeButton" class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg flex items-center justify-center transition-colors opacity-50 cursor-not-allowed">
+                            <i class="fa fa-play mr-2"></i> 继续
+                        </button>
+                        <button id="stepForwardButton" class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg flex items-center justify-center transition-colors">
+                            <i class="fa fa-step-forward mr-2"></i> 下一步
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 控制面板和统计信息 -->
+                <div class="space-y-6">
+                    <!-- 控制选项 -->
+                    <div class="bg-gray-800/50 rounded-xl p-6 border border-gray-700 shadow-xl">
+                        <h3 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fa fa-cogs text-primary mr-2"></i> 控制选项
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-gray-300 mb-2">游戏速度</label>
+                                <input type="range" id="speedSlider" min="1" max="10" value="5" 
+                                    class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary">
+                                <div class="flex justify-between text-xs text-gray-400 mt-1">
+                                    <span>慢</span>
+                                    <span>快</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-gray-300 mb-2">游戏模式</label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button id="playerModeToggle" class="bg-primary/90 hover:bg-primary text-white py-2 px-4 rounded-lg transition-colors">
+                                        <i class="fa fa-user mr-1"></i> 玩家
+                                    </button>
+                                    <button id="aiModeToggle" class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg transition-colors">
+                                        <i class="fa fa-robot mr-1"></i> AI
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-gray-300 mb-2">显示选项</label>
+                                <div class="space-y-2">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="gridCheckbox" class="mr-2 accent-primary">
+                                        <label for="gridCheckbox" class="text-gray-300">启用网格背景</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="pathCheckbox" class="mr-2 accent-primary">
+                                        <label for="pathCheckbox" class="text-gray-300">显示AI规划路径</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="qvaluesCheckbox" class="mr-2 accent-primary">
+                                        <label for="qvaluesCheckbox" class="text-gray-300">显示Q值热图</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 训练统计 -->
+                    <div class="bg-gray-800/50 rounded-xl p-6 border border-gray-700 shadow-xl">
+                        <h3 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fa fa-line-chart text-secondary mr-2"></i> 训练统计
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="bg-gray-900/50 rounded-lg p-3">
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm text-gray-400">平均得分</span>
+                                    <span class="text-sm font-medium" id="avgScore">0</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="bg-secondary h-2 rounded-full" id="avgScoreBar" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-900/50 rounded-lg p-3">
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm text-gray-400">胜率</span>
+                                    <span class="text-sm font-medium" id="winRate">0%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="bg-primary h-2 rounded-full" id="winRateBar" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-900/50 rounded-lg p-3">
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm text-gray-400">探索率</span>
+                                    <span class="text-sm font-medium" id="explorationRate">100%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="bg-warning h-2 rounded-full" id="explorationRateBar" style="width: 100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 bg-gray-900/30 rounded-lg p-3">
+                            <h4 class="text-sm font-semibold mb-2 text-gray-300">最近10次得分</h4>
+                            <div id="recentScores" class="text-xs text-gray-400">
+                                暂无数据
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 训练控制 -->
+                    <div class="bg-gray-800/50 rounded-xl p-6 border border-gray-700 shadow-xl">
+                        <h3 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fa fa-brain text-warning mr-2"></i> 强化学习控制
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-gray-300 mb-2">训练轮数</label>
+                                <div class="flex items-center">
+                                    <input type="number" id="episodesInput" value="100" min="1" 
+                                        class="bg-gray-700 border border-gray-600 rounded-l-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <button id="startTrainingButton" class="bg-primary hover:bg-primary/80 text-white py-2 px-4 rounded-r-lg transition-colors">
+                                        训练
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-gray-300 mb-2">保存/加载模型</label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <input type="file" id="modelFileInput" accept=".json" class="hidden">
+                                    <button id="loadModelButton" class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg transition-colors">
+                                        <i class="fa fa-download mr-1"></i> 加载
+                                    </button>
+                                    <button id="saveModelButton" class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg transition-colors">
+                                        <i class="fa fa-save mr-1"></i> 保存
+                                    </button>
+                                </div>
+                                <div class="mt-2 text-sm text-gray-400" id="currentModelInfo">
+                                    当前模型: <span class="font-medium">未加载</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-gray-300 mb-2">超参数调整</label>
+                                <div class="space-y-3 bg-gray-900/30 rounded-lg p-3">
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <label class="text-xs text-gray-400">学习率 (α)</label>
+                                            <input type="range" id="learningRateSlider" min="0.01" max="0.5" step="0.01" value="0.1" 
+                                                class="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary">
+                                            <span class="text-xs text-gray-300" id="learningRateValue">0.1</span>
+                                        </div>
+                                        <div>
+                                            <label class="text-xs text-gray-400">折扣因子 (γ)</label>
+                                            <input type="range" id="discountFactorSlider" min="0.5" max="0.99" step="0.01" value="0.9" 
+                                                class="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary">
+                                            <span class="text-xs text-gray-300" id="discountFactorValue">0.9</span>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <label class="text-xs text-gray-400">初始探索率 (ε)</label>
+                                            <input type="range" id="explorationRateSlider" min="0.01" max="1" step="0.01" value="0.1" 
+                                                class="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary">
+                                            <span class="text-xs text-gray-300" id="explorationRateValue">0.1</span>
+                                        </div>
+                                        <div>
+                                            <label class="text-xs text-gray-400">ε衰减率</label>
+                                            <input type="range" id="epsilonDecaySlider" min="0.9" max="0.999" step="0.001" value="0.995" 
+                                                class="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary">
+                                            <span class="text-xs text-gray-300" id="epsilonDecayValue">0.995</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 关于部分 -->
+            <section id="about" class="mt-16 bg-gray-800/50 rounded-xl p-8 border border-gray-700 shadow-xl">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <i class="fa fa-info-circle text-primary mr-2"></i> 关于强化学习贪吃蛇
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-3 text-primary">什么是强化学习？</h3>
+                        <p class="text-gray-300 mb-4">
+                            强化学习是机器学习的一个领域，关注智能体如何在环境中采取行动以最大化累积奖励。在贪吃蛇游戏中，AI通过试错学习，逐渐理解哪些行为能带来更高的分数。
+                        </p>
+                        <h3 class="text-xl font-semibold mb-3 text-primary">Q学习算法</h3>
+                        <p class="text-gray-300">
+                            本项目使用Q学习算法，这是一种无模型的强化学习方法。Q学习通过维护一个Q表来估计在特定状态下采取特定行动的长期奖励，随着训练不断更新这个表以找到最优策略。
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-3 text-primary">状态空间</h3>
+                        <p class="text-gray-300 mb-4">
+                            状态包括蛇头的位置、食物的位置、以及四个方向上的障碍物（墙壁或自身身体）检测。这为AI提供了决策所需的环境信息。
+                        </p>
+                        <h3 class="text-xl font-semibold mb-3 text-primary">奖励设计</h3>
+                        <p class="text-gray-300 mb-4">
+                            - 吃到食物: +10分<br>
+                            - 移动靠近食物: +1分<br>
+                            - 移动远离食物: -1分<br>
+                            - 撞到墙壁或自身: -100分
+                        </p>
+                        <h3 class="text-xl font-semibold mb-3 text-primary">如何使用</h3>
+                        <p class="text-gray-300">
+                            你可以亲自控制蛇的移动，也可以观察AI的学习过程。调整训练参数以查看不同设置对AI性能的影响。训练后的模型可以保存并在以后加载使用。
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="bg-dark/80 backdrop-blur-md border-t border-gray-700 py-6 px-6">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0">
+                <div class="flex items-center space-x-2">
+                    <i class="fa fa-gamepad text-primary"></i>
+                    <span class="font-bold text-gray-300">强化学习贪吃蛇游戏</span>
+                </div>
+            </div>
+            <div class="flex space-x-6">
+                <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                    <i class="fa fa-github text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                    <i class="fa fa-twitter text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                    <i class="fa fa-linkedin text-xl"></i>
+                </a>
+            </div>
+            <div class="mt-4 md:mt-0 text-gray-500 text-sm">
+                © 2025 强化学习贪吃蛇游戏 | 使用 Tailwind CSS 和 Canvas 构建
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 游戏画布和上下文
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // 获取DOM元素
+            const startScreen = document.getElementById('startScreen');
+            const gameOverScreen = document.getElementById('gameOverScreen');
+            const trainingScreen = document.getElementById('trainingScreen');
+            const startButton = document.getElementById('startButton');
+            const restartButton = document.getElementById('restartButton');
+            const trainButton = document.getElementById('trainButton');
+            const playerModeButton = document.getElementById('playerModeButton');
+            const aiModeButton = document.getElementById('aiModeButton');
+            const playerModeToggle = document.getElementById('playerModeToggle');
+            const aiModeToggle = document.getElementById('aiModeToggle');
+            const pauseButton = document.getElementById('pauseButton');
+            const resumeButton = document.getElementById('resumeButton');
+            const stepForwardButton = document.getElementById('stepForwardButton');
+            const stepBackButton = document.getElementById('stepBackButton');
+            const stopTrainingButton = document.getElementById('stopTrainingButton');
+            const startTrainingButton = document.getElementById('startTrainingButton');
+            const loadModelButton = document.getElementById('loadModelButton');
+            const saveModelButton = document.getElementById('saveModelButton');
+            const modelFileInput = document.getElementById('modelFileInput');
+            const speedSlider = document.getElementById('speedSlider');
+            const gridCheckbox = document.getElementById('gridCheckbox');
+            const pathCheckbox = document.getElementById('pathCheckbox');
+            const qvaluesCheckbox = document.getElementById('qvaluesCheckbox');
+            const learningRateSlider = document.getElementById('learningRateSlider');
+            const learningRateValue = document.getElementById('learningRateValue');
+            const discountFactorSlider = document.getElementById('discountFactorSlider');
+            const discountFactorValue = document.getElementById('discountFactorValue');
+            const explorationRateSlider = document.getElementById('explorationRateSlider');
+            const explorationRateValue = document.getElementById('explorationRateValue');
+            const epsilonDecaySlider = document.getElementById('epsilonDecaySlider');
+            const epsilonDecayValue = document.getElementById('epsilonDecayValue');
+            const episodesInput = document.getElementById('episodesInput');
+            const trainingEpisode = document.getElementById('trainingEpisode');
+            const totalEpisodes = document.getElementById('totalEpisodes');
+            const trainingScore = document.getElementById('trainingScore');
+            const trainingAvgScore = document.getElementById('trainingAvgScore');
+            const currentScoreElement = document.getElementById('currentScore');
+            const highScoreElement = document.getElementById('highScore');
+            const highScoreDisplay = document.getElementById('highScoreDisplay');
+            const trainingEpisodes = document.getElementById('trainingEpisodes');
+            const avgScore = document.getElementById('avgScore');
+            const winRate = document.getElementById('winRate');
+            const explorationRateDisplay = document.getElementById('explorationRate');
+            const avgScoreBar = document.getElementById('avgScoreBar');
+            const winRateBar = document.getElementById('winRateBar');
+            const explorationRateBar = document.getElementById('explorationRateBar');
+            const recentScores = document.getElementById('recentScores');
+            const currentModelInfo = document.getElementById('currentModelInfo');
+            
+            // 游戏配置
+            const config = {
+                gridSize: 50, // 网格大小
+                initialSpeed: 5, // 初始速度（滑块值）
+                maxSpeed: 10, // 最大速度（滑块值）
+                minSpeed: 1, // 最小速度（滑块值）
+                speedToInterval: (speed) => 150 - (speed - 1) * 13 // 速度到时间间隔的映射函数
+            };
+            
+            // 强化学习配置
+            const rlConfig = {
+                learningRate: 0.1, // 学习率 (α)
+                discountFactor: 0.9, // 折扣因子 (γ)
+                initialExplorationRate: 0.1, // 初始探索率 (ε)
+                epsilonDecay: 0.995, // ε衰减率
+                minExplorationRate: 0.01, // 最小探索率
+                foodReward: 10, // 吃到食物的奖励
+                moveTowardsReward: 1, // 向食物移动的奖励
+                moveAwayReward: -1, // 远离食物的奖励
+                collisionReward: -100 // 碰撞的惩罚
+            };
+            
+            // 游戏状态
+            let gameState = {
+                snake: [{x: 10, y: 10}], // 蛇的初始位置
+                food: {x: 5, y: 5}, // 食物的初始位置
+                direction: {x: 1, y: 0}, // 蛇的初始方向（右）
+                nextDirection: {x: 1, y: 0}, // 蛇的下一个方向
+                score: 0, // 当前分数
+                highScore: 0, // 最高分数
+                gameOver: false, // 游戏是否结束
+                paused: false, // 游戏是否暂停
+                intervalId: null, // 游戏循环的ID
+                speed: config.initialSpeed, // 当前速度
+                gridEnabled: false, // 是否显示网格
+                pathEnabled: false, // 是否显示AI路径
+                qvaluesEnabled: false, // 是否显示Q值热图
+                playerMode: true, // 是否为玩家模式
+                trainingMode: false, // 是否处于训练模式
+                trainingEpisodes: 0, // 训练回合数
+                currentTrainingEpisode: 0, // 当前训练回合
+                totalTrainingEpisodes: 0, // 总训练回合
+                trainingData: { // 训练统计数据
+                    scores: [],
+                    avgScore: 0,
+                    winRate: 0,
+                    explorationRate: rlConfig.initialExplorationRate
+                },
+                qTable: new Map(), // Q表
+                currentState: null, // 当前状态
+                lastAction: null, // 最后执行的动作
+                history: [], // 游戏历史
+                historyIndex: -1 // 当前历史索引
+            };
+            
+            // 动作空间（上、右、下、左）
+            const ACTIONS = [
+                {x: 0, y: -1}, // 上
+                {x: 1, y: 0},  // 右
+                {x: 0, y: 1},  // 下
+                {x: -1, y: 0}  // 左
+            ];
+            
+            // 初始化游戏
+            function initGame() {
+                // 设置画布尺寸，确保是网格大小的整数倍
+                const size = Math.min(window.innerWidth - 40, window.innerHeight - 200);
+                canvas.width = Math.floor(size / config.gridSize) * config.gridSize;
+                canvas.height = Math.floor(size / config.gridSize) * config.gridSize;
+                
+                // 重置游戏状态
+                gameState.snake = [{x: Math.floor(canvas.width / config.gridSize / 2), y: Math.floor(canvas.height / config.gridSize / 2)}];
+                gameState.food = {x: 5, y: 5};
+                gameState.direction = {x: 1, y: 0};
+                gameState.nextDirection = {x: 1, y: 0};
+                gameState.score = 0;
+                gameState.gameOver = false;
+                gameState.paused = false;
+                gameState.history = [];
+                gameState.historyIndex = -1;
+                
+                // 更新UI
+                currentScoreElement.textContent = gameState.score;
+                trainingScore.textContent = gameState.score;
+                
+                // 生成初始食物
+                generateFood();
+                
+                // 初始化当前状态（仅在AI模式下）
+                if (!gameState.playerMode) {
+                    gameState.currentState = getState();
+                }
+                
+                // 绘制初始画面
+                draw();
+            }
+            
+            // 生成食物
+            function generateFood() {
+                const gridWidth = canvas.width / config.gridSize;
+                const gridHeight = canvas.height / config.gridSize;
+                
+                // 确保食物不会生成在蛇身上
+                let newFood;
+                do {
+                    newFood = {
+                        x: Math.floor(Math.random() * gridWidth),
+                        y: Math.floor(Math.random() * gridHeight)
+                    };
+                } while (gameState.snake.some(segment => segment.x === newFood.x && segment.y === newFood.y));
+                
+                gameState.food = newFood;
+            }
+            
+            // 获取当前状态（仅用于AI模式）
+            function getState() {
+                if (gameState.playerMode) return null;
+                const head = gameState.snake[0];
+                const gridWidth = canvas.width / config.gridSize;
+                const gridHeight = canvas.height / config.gridSize;
+                
+                // 计算食物相对于蛇头的位置
+                const foodDirection = {
+                    x: Math.sign(gameState.food.x - head.x),
+                    y: Math.sign(gameState.food.y - head.y)
+                };
+                
+                // 检测四个方向上的障碍物（1表示有障碍物，0表示没有）
+                const obstacles = [
+                    head.y === 0 || gameState.snake.some(segment => segment.x === head.x && segment.y === head.y - 1), // 上
+                    head.x === gridWidth - 1 || gameState.snake.some(segment => segment.x === head.x + 1 && segment.y === head.y), // 右
+                    head.y === gridHeight - 1 || gameState.snake.some(segment => segment.x === head.x && segment.y === head.y + 1), // 下
+                    head.x === 0 || gameState.snake.some(segment => segment.x === head.x - 1 && segment.y === head.y) // 左
+                ];
+                
+                // 蛇的当前方向
+                const currentDirection = gameState.direction;
+                
+                return {
+                    foodDirection,
+                    obstacles,
+                    currentDirection
+                };
+            }
+            
+            // 将状态转换为字符串键
+            function stateToString(state) {
+                return JSON.stringify({
+                    foodDirection: state.foodDirection,
+                    obstacles: state.obstacles,
+                    currentDirection: state.currentDirection
+                });
+            }
+            
+            // 获取Q值
+            function getQValue(state, actionIndex) {
+                const stateKey = stateToString(state);
+                
+                if (!gameState.qTable.has(stateKey)) {
+                    gameState.qTable.set(stateKey, new Array(ACTIONS.length).fill(0));
+                }
+                
+                return gameState.qTable.get(stateKey)[actionIndex];
+            }
+            
+            // 更新Q值
+            function updateQValue(state, actionIndex, reward, nextState) {
+                const stateKey = stateToString(state);
+                
+                if (!gameState.qTable.has(stateKey)) {
+                    gameState.qTable.set(stateKey, new Array(ACTIONS.length).fill(0));
+                }
+                
+                const qValues = gameState.qTable.get(stateKey);
+                let maxNextQValue = 0;
+                const nextStateKey = stateToString(nextState);
+                
+                if (gameState.qTable.has(nextStateKey)) {
+                    maxNextQValue = Math.max(...gameState.qTable.get(nextStateKey));
+                }
+                
+                qValues[actionIndex] = qValues[actionIndex] + rlConfig.learningRate * 
+                    (reward + rlConfig.discountFactor * maxNextQValue - qValues[actionIndex]);
+                
+                qValues[actionIndex] = Math.max(-1000, Math.min(1000, qValues[actionIndex]));
+            }
+            
+            // 获取有效动作
+            function getValidActions(state) {
+                const validActions = [];
+                
+                for (let i = 0; i < ACTIONS.length; i++) {
+                    const action = ACTIONS[i];
+                    if (!(action.x === -state.currentDirection.x && action.y === -state.currentDirection.y)) {
+                        validActions.push(i);
+                    }
+                }
+                
+                return validActions;
+            }
+            
+            // 获取最优动作
+            function getBestAction(state) {
+                const validActions = getValidActions(state);
+                let bestActionIndex = validActions[0];
+                let bestQValue = getQValue(state, bestActionIndex);
+                
+                for (let i = 1; i < validActions.length; i++) {
+                    const actionIndex = validActions[i];
+                    const qValue = getQValue(state, actionIndex);
+                    if (qValue > bestQValue) {
+                        bestQValue = qValue;
+                        bestActionIndex = actionIndex;
+                    }
+                }
+                
+                return bestActionIndex;
+            }
+            
+            // 根据当前状态选择动作（ε-贪婪策略）
+            function selectAction(state) {
+                if (Math.random() < gameState.trainingData.explorationRate) {
+                    const validActions = getValidActions(state);
+                    return validActions[Math.floor(Math.random() * validActions.length)];
+                } else {
+                    return getBestAction(state);
+                }
+            }
+            
+            // 计算奖励
+            function calculateReward(oldHead, newHead, ateFood, gameOver) {
+                if (gameOver) return rlConfig.collisionReward;
+                if (ateFood) return rlConfig.foodReward;
+                
+                const oldDistance = Math.abs(oldHead.x - gameState.food.x) + Math.abs(oldHead.y - gameState.food.y);
+                const newDistance = Math.abs(newHead.x - gameState.food.x) + Math.abs(newHead.y - gameState.food.y);
+                
+                return newDistance < oldDistance ? rlConfig.moveTowardsReward : 
+                       newDistance > oldDistance ? rlConfig.moveAwayReward : 0;
+            }
+            
+            // 移动蛇
+            function moveSnake() {
+                if (gameState.paused || gameState.gameOver) return;
+                
+                // 保存移动前的状态
+                const oldHead = {x: gameState.snake[0].x, y: gameState.snake[0].y};
+                let ateFood = false;
+                let gameOver = false;
+                
+                // AI模式：选择动作
+                if (!gameState.playerMode) {
+                    const actionIndex = selectAction(gameState.currentState);
+                    const action = ACTIONS[actionIndex];
+                    if (!(action.x === -gameState.direction.x && action.y === -gameState.direction.y)) {
+                        gameState.nextDirection = action;
+                        gameState.lastAction = actionIndex;
+                    }
+                }
+                
+                // 更新方向
+                gameState.direction = gameState.nextDirection;
+                const head = {x: gameState.snake[0].x + gameState.direction.x, y: gameState.snake[0].y + gameState.direction.y};
+                
+                // 检查碰撞
+                const gridWidth = canvas.width / config.gridSize;
+                const gridHeight = canvas.height / config.gridSize;
+                if (head.x < 0 || head.x >= gridWidth || head.y < 0 || head.y >= gridHeight || 
+                    gameState.snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+                    gameOver = true;
+                }
+                
+                // 处理游戏结束
+                if (gameOver) {
+                    if (!gameState.playerMode) {
+                        const reward = calculateReward(oldHead, head, false, true);
+                        const nextState = getState();
+                        updateQValue(gameState.currentState, gameState.lastAction, reward, nextState);
+                    }
+                    gameOverHandler();
+                    return;
+                }
+                
+                // 移动蛇
+                gameState.snake.unshift(head);
+                
+                // 检查是否吃到食物
+                if (head.x === gameState.food.x && head.y === gameState.food.y) {
+                    ateFood = true;
+                    gameState.score += 10;
+                    if (gameState.score > gameState.highScore) {
+                        gameState.highScore = gameState.score;
+                        highScoreElement.textContent = gameState.highScore;
+                        highScoreDisplay.textContent = gameState.highScore;
+                    }
+                    currentScoreElement.textContent = gameState.score;
+                    trainingScore.textContent = gameState.score;
+                    generateFood();
+                } else {
+                    gameState.snake.pop();
+                }
+                
+                // AI模式：更新Q表和历史
+                if (!gameState.playerMode) {
+                    const nextState = getState();
+                    const reward = calculateReward(oldHead, head, ateFood, false);
+                    
+                    gameState.history.push({
+                        state: JSON.parse(JSON.stringify(gameState.currentState)),
+                        action: gameState.lastAction,
+                        reward,
+                        nextState,
+                        food: JSON.parse(JSON.stringify(gameState.food)),
+                        snake: JSON.parse(JSON.stringify(gameState.snake))
+                    });
+                    gameState.historyIndex = gameState.history.length - 1;
+                    
+                    if (gameState.lastAction !== null) {
+                        updateQValue(gameState.currentState, gameState.lastAction, reward, nextState);
+                    }
+                    gameState.currentState = nextState;
+                }
+                
+                // 绘制游戏
+                draw();
+                
+                // 训练模式：继续移动
+                if (gameState.trainingMode && !gameOver) {
+                    setTimeout(() => requestAnimationFrame(moveSnake), config.speedToInterval(gameState.speed));
+                }
+            }
+            
+            // 游戏结束处理
+            function gameOverHandler() {
+                gameState.gameOver = true;
+                clearInterval(gameState.intervalId);
+                
+                if (!gameState.trainingMode) {
+                    document.getElementById('finalScore').textContent = gameState.score;
+                    highScoreElement.textContent = gameState.highScore;
+                    gameOverScreen.style.display = 'flex';
+                }
+                
+                if (!gameState.playerMode && gameState.trainingMode) {
+                    gameState.trainingEpisodes++;
+                    gameState.currentTrainingEpisode++;
+                    gameState.trainingData.scores.push(gameState.score);
+                    gameState.trainingData.explorationRate = Math.max(
+                        rlConfig.minExplorationRate,
+                        gameState.trainingData.explorationRate * rlConfig.epsilonDecay
+                    );
+                    updateTrainingStats();
+                    
+                    if (gameState.currentTrainingEpisode <= gameState.totalTrainingEpisodes) {
+                        trainingEpisode.textContent = gameState.currentTrainingEpisode;
+                        initGame();
+                        setTimeout(() => requestAnimationFrame(moveSnake), config.speedToInterval(gameState.speed));
+                    } else {
+                        stopTraining();
+                    }
+                }
+            }
+            
+            // 绘制游戏
+            function draw() {
+                ctx.fillStyle = '#0F172A';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                if (gameState.gridEnabled) {
+                    drawGrid();
+                }
+                
+                if (gameState.qvaluesEnabled && !gameState.playerMode) {
+                    drawQValues();
+                }
+                
+                if (gameState.pathEnabled && !gameState.playerMode) {
+                    drawAIPath();
+                }
+                
+                ctx.fillStyle = '#F87272';
+                ctx.fillRect(
+                    gameState.food.x * config.gridSize, 
+                    gameState.food.y * config.gridSize, 
+                    config.gridSize, 
+                    config.gridSize
+                );
+                
+                gameState.snake.forEach((segment, index) => {
+                    ctx.fillStyle = index === 0 ? '#165DFF' : `rgb(54, ${93 + Math.floor((index / gameState.snake.length) * 100)}, 153)`;
+                    ctx.fillRect(
+                        segment.x * config.gridSize, 
+                        segment.y * config.gridSize, 
+                        config.gridSize, 
+                        config.gridSize
+                    );
+                    ctx.strokeStyle = '#1E293B';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(
+                        segment.x * config.gridSize, 
+                        segment.y * config.gridSize, 
+                        config.gridSize, 
+                        config.gridSize
+                    );
+                });
+                
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 16px Inter';
+                ctx.fillText(`分数: ${gameState.score}`, 10, 25);
+                if (!gameState.playerMode) {
+                    ctx.fillText(`探索率: ${gameState.trainingData.explorationRate.toFixed(2)}`, 10, 45);
+                }
+                
+                if (gameState.paused) {
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = 'white';
+                    ctx.font = 'bold 24px Inter';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('游戏暂停', canvas.width / 2, canvas.height / 2);
+                    ctx.font = '16px Inter';
+                    ctx.fillText('按空格键继续', canvas.width / 2, canvas.height / 2 + 30);
+                    ctx.textAlign = 'start';
+                }
+            }
+            
+            // 绘制网格
+            function drawGrid() {
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+                ctx.lineWidth = 1;
+                for (let x = 0; x <= canvas.width; x += config.gridSize) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, canvas.height);
+                    ctx.stroke();
+                }
+                for (let y = 0; y <= canvas.height; y += config.gridSize) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(canvas.width, y);
+                    ctx.stroke();
+                }
+            }
+            
+            // 绘制AI路径
+            function drawAIPath() {
+                ctx.strokeStyle = 'rgba(251, 189, 35, 0.5)';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                let currentState = JSON.parse(JSON.stringify(gameState.currentState));
+                let currentPos = { x: gameState.snake[0].x, y: gameState.snake[0].y };
+                ctx.moveTo(
+                    currentPos.x * config.gridSize + config.gridSize / 2,
+                    currentPos.y * config.gridSize + config.gridSize / 2
+                );
+                for (let i = 0; i < 5; i++) {
+                    const actionIndex = getBestAction(currentState);
+                    const action = ACTIONS[actionIndex];
+                    currentPos.x += action.x;
+                    currentPos.y += action.y;
+                    ctx.lineTo(
+                        currentPos.x * config.gridSize + config.gridSize / 2,
+                        currentPos.y * config.gridSize + config.gridSize / 2
+                    );
+                    currentState.currentDirection = action;
+                }
+                ctx.stroke();
+            }
+            
+            // 绘制Q值热图
+            function drawQValues() {
+                const head = gameState.snake[0];
+                const state = gameState.currentState;
+                const stateKey = stateToString(state);
+                let qValues = [0, 0, 0, 0];
+                
+                if (gameState.qTable.has(stateKey)) {
+                    qValues = gameState.qTable.get(stateKey);
+                }
+                
+                const maxQ = Math.max(...qValues, 0.1);
+                const minQ = Math.min(...qValues, -0.1);
+                const range = maxQ - minQ || 1;
+                const normalizedQ = qValues.map(q => (q - minQ) / range);
+                
+                const centerX = head.x * config.gridSize + config.gridSize / 2;
+                const centerY = head.y * config.gridSize + config.gridSize / 2;
+                
+                for (let i = 0; i < 4; i++) {
+                    const angle = i * Math.PI / 2 + Math.PI / 4;
+                    const x = centerX + Math.cos(angle) * config.gridSize;
+                    const y = centerY + Math.sin(angle) * config.gridSize;
+                    const value = normalizedQ[i];
+                    const r = Math.floor(value * 255);
+                    const b = Math.floor((1 - value) * 255);
+                    ctx.fillStyle = `rgb(${r}, 0, ${b})`;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = 'white';
+                    ctx.font = '9px Inter';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(['上', '右', '下', '左'][i], x, y);
+                }
+                ctx.textAlign = 'start';
+                ctx.textBaseline = 'alphabetic';
+            }
+            
+            // 开始游戏
+            function startGame() {
+                startScreen.style.display = 'none';
+                gameState.paused = false;
+                const interval = config.speedToInterval(gameState.speed);
+                gameState.intervalId = setInterval(moveSnake, interval);
+            }
+            
+            // 重启游戏
+            function restartGame() {
+                gameOverScreen.style.display = 'none';
+                initGame();
+                startGame();
+            }
+            
+            // 切换模式
+            function toggleMode() {
+                gameState.playerMode = !gameState.playerMode;
+                playerModeToggle.classList.toggle('bg-primary/90', gameState.playerMode);
+                playerModeToggle.classList.toggle('bg-gray-700', !gameState.playerMode);
+                aiModeToggle.classList.toggle('bg-secondary/90', !gameState.playerMode);
+                aiModeToggle.classList.toggle('bg-gray-700', gameState.playerMode);
+                playerModeButton.classList.toggle('bg-primary/90', gameState.playerMode);
+                playerModeButton.classList.toggle('bg-gray-700', !gameState.playerMode);
+                aiModeButton.classList.toggle('bg-secondary/90', !gameState.playerMode);
+                aiModeButton.classList.toggle('bg-gray-700', gameState.playerMode);
+                
+                initGame();
+                if (!gameState.gameOver && !gameState.paused) {
+                    startGame();
+                }
+            }
+            
+            // 暂停/继续游戏
+            function togglePause() {
+                if (gameState.gameOver || gameState.trainingMode) return;
+                
+                gameState.paused = !gameState.paused;
+                if (gameState.paused) {
+                    clearInterval(gameState.intervalId);
+                    pauseButton.classList.add('bg-gray-600', 'opacity-50', 'cursor-not-allowed');
+                    resumeButton.classList.remove('bg-gray-600', 'opacity-50', 'cursor-not-allowed');
+                    resumeButton.classList.add('bg-gray-700');
+                } else {
+                    const interval = config.speedToInterval(gameState.speed);
+                    gameState.intervalId = setInterval(moveSnake, interval);
+                    pauseButton.classList.remove('bg-gray-600', 'opacity-50', 'cursor-not-allowed');
+                    pauseButton.classList.add('bg-gray-700');
+                    resumeButton.classList.add('bg-gray-600', 'opacity-50', 'cursor-not-allowed');
+                    resumeButton.classList.remove('bg-gray-700');
+                }
+                draw();
+            }
+            
+            // 更新游戏速度
+            function updateSpeed() {
+                gameState.speed = parseInt(speedSlider.value);
+                if (!gameState.gameOver && !gameState.paused && !gameState.trainingMode) {
+                    clearInterval(gameState.intervalId);
+                    const interval = config.speedToInterval(gameState.speed);
+                    gameState.intervalId = setInterval(moveSnake, interval);
+                }
+            }
+            
+            // 启用/禁用网格
+            function toggleGrid() {
+                gameState.gridEnabled = gridCheckbox.checked;
+                draw();
+            }
+            
+            // 启用/禁用AI路径
+            function togglePath() {
+                gameState.pathEnabled = pathCheckbox.checked;
+                draw();
+            }
+            
+            // 启用/禁用Q值热图
+            function toggleQValues() {
+                gameState.qvaluesEnabled = qvaluesCheckbox.checked;
+                draw();
+            }
+            
+            // 后退一步
+            function stepBack() {
+                if (gameState.playerMode || gameState.trainingMode || gameState.historyIndex <= 0) return;
+                gameState.historyIndex--;
+                const pastState = gameState.history[gameState.historyIndex];
+                gameState.snake = JSON.parse(JSON.stringify(pastState.snake));
+                gameState.food = JSON.parse(JSON.stringify(pastState.food));
+                gameState.currentState = JSON.parse(JSON.stringify(pastState.state));
+                gameState.direction = ACTIONS[pastState.action];
+                gameState.nextDirection = gameState.direction;
+                draw();
+            }
+            
+            // 前进一步
+            function stepForward() {
+                if (gameState.playerMode || gameState.trainingMode || gameState.historyIndex >= gameState.history.length - 1) return;
+                gameState.historyIndex++;
+                const nextState = gameState.history[gameState.historyIndex];
+                gameState.snake = JSON.parse(JSON.stringify(nextState.snake));
+                gameState.food = JSON.parse(JSON.stringify(nextState.food));
+                gameState.currentState = JSON.parse(JSON.stringify(nextState.state));
+                gameState.direction = ACTIONS[nextState.action];
+                gameState.nextDirection = gameState.direction;
+                draw();
+            }
+            
+            // 更新训练统计信息
+            function updateTrainingStats() {
+                const scores = gameState.trainingData.scores;
+                gameState.trainingData.avgScore = scores.length ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
+                const winThreshold = 50;
+                const wins = scores.filter(score => score >= winThreshold).length;
+                gameState.trainingData.winRate = scores.length ? (wins / scores.length) * 100 : 0;
+                
+                trainingEpisodes.textContent = gameState.trainingEpisodes;
+                avgScore.textContent = gameState.trainingData.avgScore.toFixed(1);
+                winRate.textContent = `${gameState.trainingData.winRate.toFixed(1)}%`;
+                explorationRateDisplay.textContent = `${(gameState.trainingData.explorationRate * 100).toFixed(1)}%`;
+                avgScoreBar.style.width = `${Math.min(100, gameState.trainingData.avgScore)}%`;
+                winRateBar.style.width = `${Math.min(100, gameState.trainingData.winRate)}%`;
+                explorationRateBar.style.width = `${gameState.trainingData.explorationRate * 100}%`;
+                
+                const recent = scores.slice(-10).map(s => s.toString()).join(', ');
+                recentScores.textContent = recent || '暂无数据';
+                
+                trainingAvgScore.textContent = gameState.trainingData.avgScore.toFixed(1);
+            }
+            
+            // 开始训练
+            function startTraining(episodes) {
+                if (gameState.trainingMode) return;
+                gameState.trainingMode = true;
+                gameState.currentTrainingEpisode = 1;
+                gameState.totalTrainingEpisodes = episodes;
+                
+                trainingEpisode.textContent = 1;
+                totalEpisodes.textContent = episodes;
+                trainingScore.textContent = 0;
+                trainingAvgScore.textContent = gameState.trainingData.avgScore.toFixed(1);
+                trainingScreen.style.display = 'flex';
+                
+                gameState.playerMode = false;
+                toggleMode(); // 确保切换到AI模式
+                initGame();
+                requestAnimationFrame(moveSnake);
+            }
+            
+            // 停止训练
+            function stopTraining() {
+                gameState.trainingMode = false;
+                gameState.currentTrainingEpisode = 0;
+                trainingScreen.style.display = 'none';
+                clearInterval(gameState.intervalId);
+                initGame();
+                updateTrainingStats();
+            }
+            
+            // 保存模型到文件
+            function saveModelToFile() {
+                try {
+                    const modelData = {
+                        qTable: Object.fromEntries(gameState.qTable),
+                        trainingData: gameState.trainingData,
+                        trainingEpisodes: gameState.trainingEpisodes,
+                        rlConfig
+                    };
+                    const modelJson = JSON.stringify(modelData, null, 2);
+                    const blob = new Blob([modelJson], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `snake_rl_model_${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    currentModelInfo.innerHTML = `当前模型: <span class="font-medium">已保存</span>`;
+                } catch (error) {
+                    console.error('保存模型失败:', error);
+                    alert('保存模型失败: ' + error.message);
+                }
+            }
+            
+            // 加载模型从文件
+            function handleModelFileLoad(input) {
+                const file = input.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const modelData = JSON.parse(e.target.result);
+                        gameState.qTable = new Map(Object.entries(modelData.qTable));
+                        gameState.trainingData = modelData.trainingData;
+                        gameState.trainingEpisodes = modelData.trainingEpisodes;
+                        Object.assign(rlConfig, modelData.rlConfig);
+                        updateTrainingStats();
+                        currentModelInfo.innerHTML = `当前模型: <span class="font-medium">已加载 (${file.name})</span>`;
+                        alert('模型已成功加载！');
+                    } catch (error) {
+                        console.error('加载模型失败:', error);
+                        alert('加载模型失败: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            }
+            
+            // 处理键盘输入
+            function handleKeydown(e) {
+                if (gameState.trainingMode) return;
+                
+                if (e.code === 'Space') {
+                    if (gameState.gameOver) {
+                        restartGame();
+                    } else if (startScreen.style.display !== 'none') {
+                        startGame();
+                    } else {
+                        togglePause();
+                    }
+                    return;
+                }
+                
+                if (gameState.playerMode) {
+                    switch (e.code) {
+                        case 'ArrowUp':
+                            if (gameState.direction.y !== 1) gameState.nextDirection = {x: 0, y: -1};
+                            break;
+                        case 'ArrowDown':
+                            if (gameState.direction.y !== -1) gameState.nextDirection = {x: 0, y: 1};
+                            break;
+                        case 'ArrowLeft':
+                            if (gameState.direction.x !== 1) gameState.nextDirection = {x: -1, y: 0};
+                            break;
+                        case 'ArrowRight':
+                            if (gameState.direction.x !== -1) gameState.nextDirection = {x: 1, y: 0};
+                            break;
+                    }
+                }
+            }
+            
+            // 处理触控输入
+            function handleTouch(e) {
+                if (gameState.playerMode && !gameState.gameOver && !gameState.trainingMode) {
+                    const touch = e.touches[0];
+                    const rect = canvas.getBoundingClientRect();
+                    const x = touch.clientX - rect.left;
+                    const y = touch.clientY - rect.top;
+                    const centerX = canvas.width / 2;
+                    const centerY = canvas.height / 2;
+                    const angle = Math.atan2(y - centerY, x - centerX);
+                    if (angle >= -Math.PI / 4 && angle < Math.PI / 4) {
+                        if (gameState.direction.x !== -1) gameState.nextDirection = { x: 1, y: 0 };
+                    } else if (angle >= Math.PI / 4 && angle < 3 * Math.PI / 4) {
+                        if (gameState.direction.y !== -1) gameState.nextDirection = { x: 0, y: 1 };
+                    } else if (angle >= -3 * Math.PI / 4 && angle < -Math.PI / 4) {
+                        if (gameState.direction.y !== 1) gameState.nextDirection = { x: 0, y: -1 };
+                    } else {
+                        if (gameState.direction.x !== 1) gameState.nextDirection = { x: -1, y: 0 };
+                    }
+                }
+            }
+            
+            // 更新强化学习参数
+            function updateRLParams() {
+                rlConfig.learningRate = parseFloat(learningRateSlider.value);
+                learningRateValue.textContent = rlConfig.learningRate.toFixed(2);
+                rlConfig.discountFactor = parseFloat(discountFactorSlider.value);
+                discountFactorValue.textContent = rlConfig.discountFactor.toFixed(2);
+                rlConfig.initialExplorationRate = parseFloat(explorationRateSlider.value);
+                explorationRateValue.textContent = rlConfig.initialExplorationRate.toFixed(2);
+                gameState.trainingData.explorationRate = rlConfig.initialExplorationRate;
+                rlConfig.epsilonDecay = parseFloat(epsilonDecaySlider.value);
+                epsilonDecayValue.textContent = rlConfig.epsilonDecay.toFixed(3);
+                explorationRateDisplay.textContent = `${(gameState.trainingData.explorationRate * 100).toFixed(1)}%`;
+                explorationRateBar.style.width = `${gameState.trainingData.explorationRate * 100}%`;
+            }
+            
+            // 绑定事件监听器
+            startButton.addEventListener('click', startGame);
+            restartButton.addEventListener('click', restartGame);
+            trainButton.addEventListener('click', () => startTraining(parseInt(episodesInput.value)));
+            playerModeButton.addEventListener('click', toggleMode);
+            aiModeButton.addEventListener('click', toggleMode);
+            playerModeToggle.addEventListener('click', toggleMode);
+            aiModeToggle.addEventListener('click', toggleMode);
+            pauseButton.addEventListener('click', togglePause);
+            resumeButton.addEventListener('click', togglePause);
+            stepBackButton.addEventListener('click', stepBack);
+            stepForwardButton.addEventListener('click', stepForward);
+            speedSlider.addEventListener('input', updateSpeed);
+            gridCheckbox.addEventListener('change', toggleGrid);
+            pathCheckbox.addEventListener('change', togglePath);
+            qvaluesCheckbox.addEventListener('change', toggleQValues);
+            document.addEventListener('keydown', handleKeydown);
+            canvas.addEventListener('touchstart', handleTouch);
+            startTrainingButton.addEventListener('click', () => startTraining(parseInt(episodesInput.value)));
+            stopTrainingButton.addEventListener('click', stopTraining);
+            saveModelButton.addEventListener('click', saveModelToFile);
+            loadModelButton.addEventListener('click', () => modelFileInput.click());
+            modelFileInput.addEventListener('change', () => handleModelFileLoad(modelFileInput));
+            learningRateSlider.addEventListener('input', updateRLParams);
+            discountFactorSlider.addEventListener('input', updateRLParams);
+            explorationRateSlider.addEventListener('input', updateRLParams);
+            epsilonDecaySlider.addEventListener('input', updateRLParams);
+            
+            // 初始化游戏
+            initGame();
+        });
+    </script>
+</body>
+</html>
