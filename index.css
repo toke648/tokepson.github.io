@@ -400,6 +400,60 @@ body {
     border-radius: 5px; /* 可选：图片圆角 */
 }
 
+.sidebar_box {
+    width: 300px;
+    height: 300px;
+    /* background-color: rgb(209, 22, 22); */
+
+    border-radius: 5px; /* 可选：图片圆角 */
+    
+    /* 居中 */
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar_box_img {
+    width: 300px;
+    height: 50%;
+
+    padding-top: 20px;
+    /* background-color: rgb(209, 22, 22); */
+
+    border-radius: 5px; /* 可选：图片圆角 */
+    
+    /* 居中 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar_box_text {
+    width: 300px;
+    height: 40%;
+
+    border-radius: 5px;
+
+    text-align: center; /* 居中文本 */
+
+    
+    /* background-color: rgb(178, 22, 209); */
+
+}
+
+/* class用括名 id用# */
+
+#sidebar_box_text text1{
+    font-size: 50px; /* 字体大小 */
+    font-weight: bold; /* 字体粗细 */
+}
+
+.sidebar_box_img img {
+    width: 150px;
+    height: 150px;
+
+    border-radius: 50%; /* 可选：图片圆角 */
+}
+
 .sidebar_2  {
     width: 300px;
     height: 300px;
