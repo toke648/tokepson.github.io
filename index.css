@@ -287,7 +287,7 @@ body {
 
 /* 主题 */
 .container {
-    width: 1350px; /* 自定义页面宽高 */
+    width: auto; /* 自定义页面宽高 */
     height: auto; /* 自动页面宽高，不适用任何设备 */
 
     /* 上下边距 */
@@ -295,10 +295,12 @@ body {
     margin-bottom: 100px;
 
     margin-inline: auto;
+
+    /* padding: 35px; */
     
     border-radius: 10px; /* 可选：图片圆角 */
 
-    background-color: white;
+    /* background-color: white; */
 
     /* background-color: aqua; */
 
@@ -319,7 +321,7 @@ body {
 
     margin-inline: 5%;
 
-    background-color: white;
+    /* background-color: white; */
 
     border-radius: 10px; /* 可选：图片圆角 */
 
@@ -376,19 +378,19 @@ body {
 /* 只要两边都设置auto，那么两边的元素就自动会居中 */
 .sidebar {
     width: auto;
-    height: 1200px;
+    height: auto;
 
     margin-left: 20px;
     margin-right: auto;
 
     padding: 10px;
 
-    margin-top: 20px;
+    /* margin-top: 10px; */
 
     /* 圆角 */
     border-radius: 10px;
 
-    /* background-color: cornflowerblue; */
+    background-color: rgb(255, 255, 255);
 }
 
 .sidebar_1 {
@@ -410,10 +412,10 @@ body {
 }
 
 .theme {
-    width: 800px;
+    width: 65%;
     height: auto;
     background-color: rgb(255, 255, 255);
-    padding: 10px;
+    padding: 25px;
     height: auto;
 
     /* 小屏模式，文章占据主体，侧边栏移到下面 */
